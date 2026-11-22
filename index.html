@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trạm Thưởng Dopamine | Overdrive Edition (226 Items)</title>
+    <title>Trạm Thưởng Dopamine | 21 Worlds Edition (112.756 Items)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Inter & JetBrains Mono -->
@@ -253,7 +253,7 @@
                             Trạm Thưởng Dopamine
                         </h1>
                         <span class="px-2 py-0.5 rounded bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 font-mono font-bold text-[10px]">
-                            OVERDRIVE 226
+                            21 WORLDS
                         </span>
                         <span id="fever-badge" class="hidden px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-pink-500 text-slate-950 font-mono font-extrabold text-[10px] uppercase tracking-wider animate-bounce">
                             🔥 FEVER x2 LUCK
@@ -263,6 +263,8 @@
                         <span>Mảnh Tinh Thể: <strong id="header-shards" class="text-fuchsia-300 font-mono">0</strong> 💠</span>
                         <span>•</span>
                         <span>XP Thụ Động: <strong id="header-passive-xp" class="text-emerald-400 font-mono">+0</strong>/phút</span>
+                        <span class="hidden sm:inline">•</span>
+                        <span class="hidden sm:inline">World: <strong id="header-world" class="text-cyan-300 font-mono">W1</strong></span>
                     </div>
                 </div>
             </div>
@@ -429,7 +431,7 @@
                             <span>🛡️</span> Loadout Trang Bị 4 Ô
                         </h3>
                         <button onclick="switchRightTab('collection', 'all')" class="text-xs text-cyan-400 hover:underline font-semibold cursor-pointer">
-                            Mở Kho 226 Món →
+                            Mở Kho Đồ →
                         </button>
                     </div>
 
@@ -503,31 +505,51 @@
             </div>
 
             <!-- =================================================================
-                 CỘT PHẢI (7 CỘT): MÁY QUAY GACHA + KHO 226 ITEM + MINI-GAMES
+                 CỘT PHẢI (7 CỘT): MÁY QUAY GACHA + KHO ĐỒ 21 WORLD + BẢN ĐỒ + MINI-GAMES
                  ================================================================= -->
             <div class="lg:col-span-7 flex flex-col gap-4">
                 
                 <!-- Thanh Chuyển Tab Cột Phải -->
-                <div class="grid grid-cols-3 gap-2 p-1.5 cyber-panel rounded-2xl">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 p-1.5 cyber-panel rounded-2xl">
                     <button onclick="switchRightTab('gacha')" id="rtab-btn-gacha" class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm bg-gradient-to-r from-cyan-500/25 to-purple-500/25 border border-cyan-400/60 text-white transition cursor-pointer flex items-center justify-center gap-1.5">
-                        <span>🎰</span> Máy Quay Gacha
+                        <span>🎰</span> Gacha
                     </button>
-                    <button onclick="switchRightTab('collection', 'all')" id="rtab-btn-collection" class="py-2.5 px-3 rounded-xl font-semibold text-xs sm:text-sm bg-slate-900/60 border border-transparent text-slate-400 hover:text-white transition cursor-pointer flex items-center justify-center gap-1.5">
-                        <span>🎒</span> Kho Đồ (<span id="collection-count" class="font-mono text-cyan-300">0/226</span>)
+                    <button onclick="switchRightTab('collection')" id="rtab-btn-collection" class="py-2.5 px-3 rounded-xl font-semibold text-xs sm:text-sm bg-slate-900/60 border border-transparent text-slate-400 hover:text-white transition cursor-pointer flex items-center justify-center gap-1.5">
+                        <span>🎒</span><span>Kho (<span id="collection-count" class="font-mono text-cyan-300">0</span>)</span>
+                    </button>
+                    <button onclick="switchRightTab('worlds')" id="rtab-btn-worlds" class="py-2.5 px-3 rounded-xl font-semibold text-xs sm:text-sm bg-slate-900/60 border border-transparent text-slate-400 hover:text-white transition cursor-pointer flex items-center justify-center gap-1.5">
+                        <span>🌍</span><span>Thế Giới (<span id="worlds-unlocked-count" class="font-mono text-emerald-300">1/21</span>)</span>
                     </button>
                     <button onclick="switchRightTab('minigames')" id="rtab-btn-minigames" class="py-2.5 px-3 rounded-xl font-semibold text-xs sm:text-sm bg-slate-900/60 border border-transparent text-slate-400 hover:text-white transition cursor-pointer flex items-center justify-center gap-1.5">
-                        <span>🎮</span> Mini-Game 30s
+                        <span>🎮</span> Mini-Game
                     </button>
                 </div>
 
                 <!-- =============================================================
-                     TAB PHẢI 1: MÁY QUAY LƯỢNG TỬ (9 BẬC HIẾM, x1 / x3 / x10)
+                     TAB PHẢI 1: MÁY QUAY LƯỢNG TỬ THEO WORLD (x1 / x3 / x10 / x100)
                      ============================================================= -->
                 <div id="rpanel-gacha" class="cyber-panel rounded-2xl p-5 space-y-4">
+                    <!-- World đang quay -->
+                    <div id="gacha-world-bar" class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 p-2.5 rounded-xl bg-slate-950/85 border border-slate-700 transition">
+                        <div id="gacha-world-icon" class="text-3xl leading-none">⚛️</div>
+                        <div class="min-w-0 flex-1">
+                            <div class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Đang quay tại <span id="gacha-world-tag" class="font-mono">WORLD 1/21</span></div>
+                            <div id="gacha-world-name" class="font-extrabold text-sm sm:text-base truncate">Trạm Khởi Nguyên</div>
+                            <div id="gacha-world-progress" class="text-[10px] font-mono text-slate-400 truncate">0/226 món</div>
+                            <div class="mt-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                <div id="gacha-world-bar-fill" class="h-full rounded-full transition-all duration-500" style="width:0%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <select id="gacha-world-select" onchange="travelToWorld(parseInt(this.value, 10))" class="flex-1 sm:flex-none bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none sm:max-w-[200px]" title="Chọn World để quay"></select>
+                            <button onclick="switchRightTab('worlds')" class="px-2.5 py-1.5 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-500/40 text-emerald-300 text-xs font-bold transition cursor-pointer whitespace-nowrap">🗺️ Bản đồ</button>
+                        </div>
+                    </div>
+
                     <div class="flex flex-wrap items-center justify-between gap-2">
                         <div>
                             <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
-                                <span>🌌</span> Triệu Hồi Lượng Tử (9 Bậc Hiếm)
+                                <span>🌌</span><span>Triệu Hồi Lượng Tử (<span id="gacha-tier-count">9</span> Bậc Hiếm)</span>
                             </h2>
                             <p class="text-xs text-slate-400">Trùng vật phẩm tự động tách thành <span class="text-fuchsia-300 font-semibold">Mảnh Tinh Thể 💠</span> để nâng Sao!</p>
                         </div>
@@ -539,21 +561,19 @@
                         </div>
                     </div>
 
-                    <!-- Bảng Tỉ Lệ 9 Bậc Độ Hiếm (Tự động tính cả Luck Boost & Fever Mode) -->
-                    <div id="rarity-9-grid" class="grid grid-cols-3 sm:grid-cols-5 gap-1.5 text-center text-[10px]">
-                        <!-- Render bằng JS để hiển thị chính xác tỷ lệ thực tế sau khi cộng Luck -->
+                    <!-- Bảng tỉ lệ các bậc của World hiện tại (đã cộng Luck Boost & Fever Mode) -->
+                    <div id="rarity-9-grid" class="grid grid-cols-3 sm:grid-cols-5 xl:grid-cols-6 gap-1.5 text-center text-[10px] max-h-[176px] overflow-y-auto pr-0.5">
+                        <!-- Render bằng JS -->
                     </div>
 
                     <!-- SÂN KHẤU HIỂN THỊ GACHA -->
                     <div id="rng-stage" class="relative min-h-[300px] rounded-2xl bg-slate-950/95 border-2 border-slate-800 flex flex-col items-center justify-center p-4 text-center overflow-hidden transition-all duration-300">
-                        
+
                         <!-- 1. Chờ quay -->
                         <div id="rng-idle-view" class="space-y-3 animate-float">
-                            <div class="text-6xl drop-shadow-[0_0_20px_rgba(0,243,255,0.4)]">🎁</div>
-                            <div class="font-extrabold text-lg text-white">226 Bảo Vật Đang Chờ Giải Mã!</div>
-                            <div class="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
-                                Săn tìm các bảo vật bậc <span class="text-emerald-400 font-bold">Vũ Trụ (0.25%)</span> và <span class="glitch-effect font-bold text-cyan-300">Dị Bản 1-in-10,000 (0.05%)</span> với hiệu ứng xé rách màn hình!
-                            </div>
+                            <div id="idle-world-icon" class="text-6xl drop-shadow-[0_0_20px_rgba(0,243,255,0.4)]">🎁</div>
+                            <div id="idle-title" class="font-extrabold text-lg text-white">226 Bảo Vật Đang Chờ Giải Mã!</div>
+                            <div id="idle-sub" class="text-xs text-slate-400 max-w-md mx-auto leading-relaxed"></div>
                         </div>
 
                         <!-- 2. Đang quay Roulette -->
@@ -585,7 +605,7 @@
                                 +5% XP Bài Tập
                             </div>
                             <p id="result-desc" class="text-xs text-slate-400 mt-1.5 max-w-md mx-auto">Mô tả vật phẩm</p>
-                            
+
                             <div class="mt-4 flex flex-wrap items-center justify-center gap-2">
                                 <span id="result-status-tag" class="px-2.5 py-1 rounded-lg text-xs font-bold">
                                     ✨ MỚI MỞ KHÓA!
@@ -596,35 +616,41 @@
                             </div>
                         </div>
 
-                        <!-- 4. Kết quả Quay Nhanh x3 / x10 -->
-                        <div id="rng-multi-result-view" class="hidden w-full space-y-3 animate-card-pop">
-                            <div class="flex items-center justify-between px-1">
+                        <!-- 4. Kết quả Quay x3 / x10 / x100 -->
+                        <div id="rng-multi-result-view" class="hidden w-full space-y-2.5 animate-card-pop">
+                            <div class="flex flex-wrap items-center justify-between gap-1 px-1">
                                 <span id="multi-result-title" class="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
                                     🔥 KẾT QUẢ TRIỆU HỒI NHANH 🔥
                                 </span>
                                 <span id="multi-shards-summary" class="text-xs font-mono font-bold text-fuchsia-300"></span>
                             </div>
-                            <div id="multi-cards-grid" class="grid grid-cols-2 sm:grid-cols-5 gap-2 max-h-[260px] overflow-y-auto p-1">
+                            <div id="multi-tier-summary" class="flex flex-wrap justify-center gap-1 px-1"></div>
+                            <div id="multi-cards-grid" class="grid grid-cols-2 sm:grid-cols-5 gap-2 max-h-[300px] overflow-y-auto p-1">
                                 <!-- Render các thẻ bài -->
                             </div>
                         </div>
                     </div>
 
-                    <!-- BỘ NÚT ĐIỀU KHIỂN QUAY GACHA (x1, x3, x10, Thử) -->
+                    <!-- BỘ NÚT ĐIỀU KHIỂN QUAY GACHA (x1, x3, x10, x100, Thử) -->
                     <div class="grid grid-cols-2 sm:grid-cols-12 gap-2.5 pt-1">
-                        <button onclick="startGachaRoll(1, false)" class="sm:col-span-3 py-3 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-110 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition flex flex-col items-center justify-center cursor-pointer">
+                        <button onclick="startGachaRoll(1, false)" class="sm:col-span-2 py-3 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-110 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition flex flex-col items-center justify-center cursor-pointer">
                             <span>🎟️ Quay x1</span>
                             <span class="text-[10px] font-mono opacity-80">(1 Vé)</span>
                         </button>
 
-                        <button onclick="startGachaRoll(3, false)" class="sm:col-span-4 py-3 px-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-pink-500/25 transition flex flex-col items-center justify-center cursor-pointer">
+                        <button onclick="startGachaRoll(3, false)" class="sm:col-span-3 py-3 px-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-pink-500/25 transition flex flex-col items-center justify-center cursor-pointer">
                             <span>🔥 Quay x3</span>
                             <span class="text-[10px] font-mono opacity-90">(3 Vé)</span>
                         </button>
 
                         <button onclick="startGachaRoll(10, false)" class="sm:col-span-3 py-3 px-3 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-cyan-500/25 transition flex flex-col items-center justify-center cursor-pointer border border-cyan-300/40">
                             <span>⚡ Quay x10</span>
-                            <span class="text-[10px] font-mono opacity-90">(10 Vé • Siêu Tốc)</span>
+                            <span class="text-[10px] font-mono opacity-90">(10 Vé)</span>
+                        </button>
+
+                        <button onclick="startGachaRoll(100, false)" class="sm:col-span-2 py-3 px-3 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:brightness-110 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg shadow-emerald-500/25 transition flex flex-col items-center justify-center cursor-pointer border border-emerald-200/40">
+                            <span>🌀 Quay x100</span>
+                            <span class="text-[10px] font-mono opacity-80">(100 Vé)</span>
                         </button>
 
                         <button id="btn-roll-free" onclick="startGachaRoll(1, true)" class="sm:col-span-2 py-2.5 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold text-xs transition flex flex-col items-center justify-center cursor-pointer">
@@ -635,56 +661,118 @@
                 </div>
 
                 <!-- =============================================================
-                     TAB PHẢI 2: KHO BỘ SƯU TẬP 226 VẬT PHẨM & NÂNG SAO / GHÉP MẢNH
+                     TAB PHẢI 2: KHO BẢO VẬT THEO WORLD (TÌM KIẾM • LỌC • PHÂN TRANG)
                      ============================================================= -->
-                <div id="rpanel-collection" class="hidden cyber-panel rounded-2xl p-5 space-y-4">
+                <div id="rpanel-collection" class="hidden cyber-panel rounded-2xl p-5 space-y-3">
                     <div class="flex flex-wrap items-center justify-between gap-2">
                         <div>
                             <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
-                                <span>🎒</span> Kho 226 Bảo Vật & Xưởng Chế Tạo
+                                <span>🎒</span> Kho Bảo Vật & Xưởng Chế Tạo
                             </h2>
                             <p class="text-xs text-slate-400">Dùng <span class="text-fuchsia-300 font-bold">Mảnh Tinh Thể 💠</span> để nâng lên ★5 (x2.0 Buff) hoặc ghép món mới!</p>
                         </div>
-                        <div class="px-3 py-1.5 rounded-xl bg-fuchsia-950/50 border border-fuchsia-500/40 font-mono text-xs font-bold text-fuchsia-300">
-                            Bạn có: <span id="inv-shards-badge">0</span> 💠
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button onclick="autoEquipBest()" class="px-3 py-1.5 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/50 text-cyan-200 text-xs font-bold transition cursor-pointer">
+                                ⚡ Lắp đồ mạnh nhất
+                            </button>
+                            <div class="px-3 py-1.5 rounded-xl bg-fuchsia-950/50 border border-fuchsia-500/40 font-mono text-xs font-bold text-fuchsia-300">
+                                Bạn có: <span id="inv-shards-badge">0</span> 💠
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Bộ lọc tìm kiếm, Loại trang bị, Trạng thái & 9 Bậc Hiếm -->
+                    <!-- Tiến độ sưu tập -->
+                    <div id="inv-progress" class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-1.5"></div>
+
+                    <!-- Bộ lọc: World, Tìm kiếm, Loại, Trạng thái, Sao, Sắp xếp, Kiểu xem & Bậc hiếm -->
                     <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-slate-800">
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                            <input type="text" id="filter-search" oninput="renderCollectionGrid()" placeholder="🔍 Tìm tên vật phẩm..." 
-                                class="bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-lg px-3 py-1.5 text-xs text-white outline-none">
-                            
-                            <select id="filter-slot" onchange="renderCollectionGrid()" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 outline-none">
-                                <option value="all">📦 Tất cả 4 Loại Trang Bị</option>
-                                <option value="core">⚛️ Lõi Lò Phản Ứng (+% XP)</option>
+                            <select id="filter-world" onchange="onInvFilterChange()" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 outline-none"></select>
+                            <div class="relative sm:col-span-2">
+                                <input type="text" id="filter-search" oninput="onInvSearchInput()" placeholder="🔍 Tìm tên / chỉ số (may man, crit) / #123 / w5 — không dấu cũng được"
+                                    class="w-full bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-lg pl-3 pr-8 py-1.5 text-xs text-white outline-none">
+                                <button id="filter-search-clear" onclick="clearInvSearch()" class="hidden absolute right-1.5 top-1/2 -translate-y-1/2 px-1.5 rounded text-slate-400 hover:text-white text-xs cursor-pointer" title="Xóa tìm kiếm">✕</button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                            <select id="filter-slot" onchange="onInvFilterChange()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none">
+                                <option value="all">📦 Tất cả loại</option>
+                                <option value="core">⚛️ Lõi (+% XP)</option>
                                 <option value="aura">✨ Hào Quang (+% May Mắn)</option>
-                                <option value="drone">🤖 Drone / Thú Cưng (+Vé / XP)</option>
-                                <option value="chip">💾 Chip Hệ Thống (Crit / Fever)</option>
+                                <option value="drone">🤖 Drone (+Vé / XP)</option>
+                                <option value="chip">💾 Chip (Crit / Fever)</option>
                             </select>
-
-                            <select id="filter-owned" onchange="renderCollectionGrid()" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 outline-none">
-                                <option value="all">👁️ Tất cả trạng thái</option>
+                            <select id="filter-owned" onchange="onInvFilterChange()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none">
+                                <option value="all">👁️ Mọi trạng thái</option>
                                 <option value="owned">✅ Đã sở hữu</option>
                                 <option value="unowned">🔒 Chưa mở khóa</option>
+                                <option value="equipped">🛡️ Đang lắp</option>
+                                <option value="upgradable">⭐ Nâng sao được</option>
+                                <option value="craftable">🔨 Chế tạo được</option>
+                                <option value="maxed">👑 Đã MAX ★5</option>
                             </select>
+                            <select id="filter-stars" onchange="onInvFilterChange()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none">
+                                <option value="0">★ Mọi số sao</option>
+                                <option value="1">★1</option>
+                                <option value="2">★2</option>
+                                <option value="3">★3</option>
+                                <option value="4">★4</option>
+                                <option value="5">★5</option>
+                            </select>
+                            <select id="filter-sort" onchange="onInvFilterChange()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none">
+                                <option value="rarity_desc">↓ Hiếm nhất</option>
+                                <option value="rarity_asc">↑ Thường nhất</option>
+                                <option value="power">💪 Mạnh nhất</option>
+                                <option value="stars">★ Nhiều sao</option>
+                                <option value="num"># Số hiệu</option>
+                                <option value="name">🔤 Tên A→Z</option>
+                            </select>
+                            <div class="col-span-2 sm:col-span-1 grid grid-cols-2 gap-1 p-0.5 rounded-lg bg-slate-900 border border-slate-700">
+                                <button id="view-btn-card" onclick="setInvView('card')" class="py-1 rounded-md text-[11px] font-bold bg-cyan-500 text-slate-950 cursor-pointer">🃏 Thẻ</button>
+                                <button id="view-btn-compact" onclick="setInvView('compact')" class="py-1 rounded-md text-[11px] font-bold text-slate-400 hover:text-white cursor-pointer">▦ Lưới</button>
+                            </div>
                         </div>
 
-                        <!-- Lọc nhanh 9 Bậc Độ Hiếm -->
-                        <div class="flex flex-wrap gap-1 pt-1" id="rarity-filter-pills">
+                        <!-- Lọc nhanh theo bậc hiếm (chỉ hiện các bậc có trong World đang chọn) -->
+                        <div class="flex flex-wrap gap-1 pt-1 max-h-[96px] overflow-y-auto" id="rarity-filter-pills">
                             <!-- Render bằng JS -->
                         </div>
                     </div>
 
-                    <!-- Danh sách vật phẩm -->
-                    <div id="inventory-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2.5 max-h-[520px] overflow-y-auto pr-1">
+                    <div class="flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                        <span id="inv-result-summary" class="text-slate-400 font-mono"></span>
+                        <div id="inv-pager-top" class="flex items-center gap-1"></div>
+                    </div>
+
+                    <!-- Danh sách vật phẩm (phân trang) -->
+                    <div id="inventory-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2.5 max-h-[560px] overflow-y-auto pr-1">
+                        <!-- Render bằng JS -->
+                    </div>
+
+                    <div id="inv-pager-bottom" class="flex flex-wrap items-center justify-center gap-1 pt-1"></div>
+                </div>
+
+                <!-- =============================================================
+                     TAB PHẢI 3: BẢN ĐỒ 21 THẾ GIỚI
+                     ============================================================= -->
+                <div id="rpanel-worlds" class="hidden cyber-panel rounded-2xl p-5 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
+                                <span>🌍</span> Bản Đồ 21 Thế Giới
+                            </h2>
+                            <p class="text-xs text-slate-400">Sưu tập <span class="text-emerald-300 font-bold">≥ 75%</span> bảo vật của một world để mở khóa world kế tiếp. Mỗi world mới có thêm 1 bậc hiếm siêu cấp!</p>
+                        </div>
+                        <div id="world-map-summary" class="px-3 py-1.5 rounded-xl bg-emerald-950/50 border border-emerald-500/40 font-mono text-[11px] font-bold text-emerald-300 text-right"></div>
+                    </div>
+                    <div id="world-map-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2.5 max-h-[680px] overflow-y-auto pr-1">
                         <!-- Render bằng JS -->
                     </div>
                 </div>
 
+
                 <!-- =============================================================
-                     TAB PHẢI 3: 3 MINI-GAME XẢ STRESS (30s)
+                     TAB PHẢI 4: 3 MINI-GAME XẢ STRESS (30s)
                      ============================================================= -->
                 <div id="rpanel-minigames" class="hidden cyber-panel rounded-2xl p-5 space-y-4">
                     <div class="grid grid-cols-3 gap-2 p-1.5 bg-slate-950/90 rounded-xl border border-slate-800">
@@ -751,6 +839,10 @@
         </div>
     </main>
 
+    <!-- MODAL CHI TIẾT VẬT PHẨM -->
+    <div id="item-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4" onclick="if (event.target === this) closeItemModal()">
+        <div id="item-modal-body" class="cyber-panel rounded-2xl max-w-md w-full p-5 border border-slate-700 max-h-[90vh] overflow-y-auto"></div>
+    </div>
     <!-- MODAL XUẤT / NHẬP MÃ LƯU TRỮ (SAVE CODE) -->
     <div id="save-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
         <div class="cyber-panel rounded-2xl max-w-lg w-full p-5 space-y-4 border border-slate-700">
@@ -761,7 +853,7 @@
                 <button onclick="closeSaveModal()" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer">✕</button>
             </div>
             <p class="text-xs text-slate-400 leading-relaxed">
-                Copy mã bên dưới để lưu trữ tiến độ (Level, 226 vật phẩm, cấp Sao, Mảnh Tinh Thể) hoặc dán mã từ thiết bị khác vào để khôi phục.
+                Copy mã bên dưới để lưu trữ tiến độ (Level, 21 World, 112.756 vật phẩm, cấp Sao, Mảnh Tinh Thể) hoặc dán mã từ thiết bị khác vào để khôi phục.
             </p>
             <textarea id="save-code-textarea" rows="4" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 font-mono text-[11px] text-cyan-300 outline-none focus:border-cyan-400" placeholder="Dán mã lưu trữ tại đây..."></textarea>
             <div class="flex flex-wrap gap-2 justify-end">
@@ -776,7 +868,7 @@
     </div>
 
     <footer class="border-t border-cyber-border/60 py-3 px-4 text-center text-xs text-slate-500">
-        Dopamine Reward Hub • Overdrive Edition (226 Items • 9 Rarity Tiers • 4-Slot Loadout)
+        Dopamine Reward Hub • 21 Worlds Edition (112.756 Items • 29 Rarity Tiers • 4-Slot Loadout)
     </footer>
 
     <script>
@@ -1044,8 +1136,83 @@
         }
 
         /* =========================================================================
-           3. HỆ THỐNG 9 BẬC ĐỘ HIẾM & KHỞI TẠO 226 VẬT PHẨM ĐỘC BẢN
+           3. HỆ THỐNG 29 BẬC ĐỘ HIẾM • 21 THẾ GIỚI • 112.756 VẬT PHẨM
            ========================================================================= */
+
+        // ---- Tiện ích màu sắc, định dạng số & chuỗi ----
+        function hexToRgb(hex) {
+            const h = hex.replace('#', '');
+            const full = h.length === 3 ? h.split('').map(c => c + c).join('') : h;
+            const n = parseInt(full, 16);
+            return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+        }
+        function hexToRgba(hex, a) {
+            const [r, g, b] = hexToRgb(hex);
+            return `rgba(${r},${g},${b},${a})`;
+        }
+        function lightenHex(hex, amt = 0.45) {
+            const [r, g, b] = hexToRgb(hex);
+            const f = v => Math.round(v + (255 - v) * amt).toString(16).padStart(2, '0');
+            return `#${f(r)}${f(g)}${f(b)}`;
+        }
+
+        // Số lớn kiểu Việt Nam: 12.345 • 1,2Tr • 3,4Tỷ • 5,6NTỷ
+        function fmt(n) {
+            n = Math.round(Number(n) || 0);
+            const a = Math.abs(n);
+            if (a < 1e6) return n.toLocaleString('vi-VN');
+            const units = [[1e15, 'TrTỷ'], [1e12, 'NTỷ'], [1e9, 'Tỷ'], [1e6, 'Tr']];
+            for (const [v, u] of units) {
+                if (a >= v) {
+                    const x = n / v;
+                    const digits = Math.abs(x) >= 100 ? 0 : (Math.abs(x) >= 10 ? 1 : 2);
+                    return `${parseFloat(x.toFixed(digits)).toString().replace('.', ',')}${u}`;
+                }
+            }
+            return String(n);
+        }
+
+        // Tỷ lệ rơi: >= 0.01% hiển thị %, nhỏ hơn hiển thị dạng 1/X
+        function formatChance(pct) {
+            if (pct >= 1) return `${pct.toFixed(1)}%`;
+            if (pct >= 0.01) return `${pct.toFixed(2)}%`;
+            const oneIn = Number((100 / pct).toPrecision(2));
+            return `1/${fmt(oneIn)}`;
+        }
+
+        // Bỏ dấu tiếng Việt để tìm kiếm ("long hon" -> khớp "Long Hồn")
+        function normVN(s) {
+            return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase();
+        }
+        function cleanSearchText(s) {
+            return normVN(s).replace(/[^a-z0-9ω]+/g, ' ').trim();
+        }
+        const SEARCH_TEXT_CACHE = new Map();
+        function cleanSearchTextCached(s) {
+            let v = SEARCH_TEXT_CACHE.get(s);
+            if (v === undefined) { v = cleanSearchText(s); SEARCH_TEXT_CACHE.set(s, v); }
+            return v;
+        }
+
+        function toRoman(n) {
+            const map = [[1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'], [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'], [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']];
+            let out = '';
+            for (const [v, s] of map) { while (n >= v) { out += s; n -= v; } }
+            return out;
+        }
+
+        // Bộ sinh số ngẫu nhiên có seed cố định → mỗi lần mở trang, đồ của mọi World luôn y hệt nhau
+        function mulberry32(seed) {
+            let a = seed >>> 0;
+            return function () {
+                a = (a + 0x6D2B79F5) >>> 0;
+                let t = a;
+                t = Math.imul(t ^ (t >>> 15), t | 1);
+                t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+                return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+            };
+        }
+
         const RARITIES = {
             common:       { key: 'common',       tier: 1, label: 'Thường',     baseChance: 42.00, color: '#94a3b8', secondary: '#475569', glow: 'rgba(148,163,184,0.35)', shards: 1,   craftCost: 5,    badge: 'bg-slate-800 text-slate-300 border-slate-600' },
             uncommon:     { key: 'uncommon',     tier: 2, label: 'Phổ Biến',   baseChance: 28.00, color: '#22c55e', secondary: '#15803d', glow: 'rgba(34,197,94,0.4)',    shards: 2,   craftCost: 12,   badge: 'bg-green-950 text-green-300 border-green-500' },
@@ -1058,13 +1225,137 @@
             singularity:  { key: 'singularity',  tier: 9, label: 'Dị Bản',     baseChance: 0.05,  color: '#00f3ff', secondary: '#ff2a85', glow: 'rgba(0,243,255,0.95)',    shards: 999, craftCost: 4500, badge: 'singularity-rainbow border-cyan-300 font-extrabold' }
         };
 
-        const RARITY_ORDER = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic', 'transcendent', 'cosmic', 'singularity'];
+        const BASE_RARITY_ORDER = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic', 'transcendent', 'cosmic', 'singularity'];
 
         const SLOT_META = {
             core:  { label: 'Lõi Phản Ứng', icon: '⚛️', short: 'Lõi' },
             aura:  { label: 'Hào Quang',    icon: '✨', short: 'Aura' },
             drone: { label: 'Drone / Pet',  icon: '🤖', short: 'Drone' },
             chip:  { label: 'Chip Hệ Thống',icon: '💾', short: 'Chip' }
+        };
+
+
+        // ---- 20 BẬC HIẾM SIÊU CẤP MỚI (mỗi World mới mở thêm đúng 1 bậc) ----
+        // oneIn = tỷ lệ gốc "1 trên X lượt quay" (chưa tính May Mắn)
+        const ULTRA_TIER_DEFS = [
+            { key: 'primordial',   label: 'Nguyên Thủy',            oneIn: 3500,      color: '#f97316', secondary: '#9a3412', adj: ['Nguyên Thủy','Tiền Sử','Sơ Khai','Hoang Sơ','Cội Nguồn','Tổ Tiên','Man Hoang','Đá Cổ'] },
+            { key: 'revelation',   label: 'Thiên Khải',             oneIn: 6000,      color: '#facc15', secondary: '#a16207', adj: ['Thiên Khải','Khải Huyền','Mặc Khải','Tiên Tri','Thánh Dụ','Thiên Thư','Ánh Khải','Lời Sấm'] },
+            { key: 'voidborn',     label: 'Hư Không',               oneIn: 10000,     color: '#8b5cf6', secondary: '#4c1d95', adj: ['Hư Vô Tận','Rỗng Vô','Vô Định','Hư Thực','Cõi Rỗng','Lỗ Trống','Vô Hình','Không Sắc'] },
+            { key: 'eternal',      label: 'Vĩnh Hằng',              oneIn: 17500,     color: '#38bdf8', secondary: '#0369a1', adj: ['Vĩnh Hằng','Thiên Thu','Muôn Kiếp','Trường Tồn','Bất Biến','Vạn Cổ','Thiên Niên','Mãi Mãi'] },
+            { key: 'omnipotent',   label: 'Toàn Năng',              oneIn: 30000,     color: '#f43f5e', secondary: '#9f1239', adj: ['Toàn Năng','Vạn Năng','Toàn Tri','Toàn Quyền','Vô Địch','Bách Chiến','Vạn Thắng','Chí Tôn'] },
+            { key: 'multiversal',  label: 'Đa Vũ Trụ',              oneIn: 50000,     color: '#2dd4bf', secondary: '#0f766e', adj: ['Đa Vũ Trụ','Song Song','Liên Chiều','Vạn Giới','Đa Tầng','Xuyên Giới','Tam Thiên','Đa Thực Tại'] },
+            { key: 'chrono',       label: 'Thời Không',             oneIn: 90000,     color: '#c084fc', secondary: '#6b21a8', adj: ['Thời Không','Xuyên Thời','Nghịch Thời','Dừng Thời','Gấp Khúc','Vòng Thời','Thời Lưu','Không Gian Gấp'] },
+            { key: 'chaos',        label: 'Hỗn Độn',                oneIn: 150000,    color: '#dc2626', secondary: '#450a0a', adj: ['Hỗn Độn','Loạn Thế','Hỗn Nguyên','Cuồng Bạo','Vô Trật Tự','Hỗn Loạn','Bão Hỗn','Tà Hỗn'] },
+            { key: 'genesis',      label: 'Sáng Thế',               oneIn: 250000,    color: '#fde047', secondary: '#ca8a04', adj: ['Sáng Thế','Khai Sinh','Tạo Hóa','Kiến Tạo','Khai Nguyên','Sinh Thành','Thần Tạo','Hồng Hoang'] },
+            { key: 'unknowable',   label: 'Bất Khả Tri',            oneIn: 450000,    color: '#e2e8f0', secondary: '#475569', adj: ['Bất Khả Tri','Ngoài Hiểu Biết','Huyền Vi','Khó Lường','Vô Ngôn','Siêu Lý','Bí Ẩn Tối','Không Thể Gọi'] },
+            { key: 'immeasurable', label: 'Vô Lượng',               oneIn: 750000,    color: '#4ade80', secondary: '#166534', adj: ['Vô Lượng','Vô Số','Hằng Hà','Vô Hạn Lượng','Ngàn Tỷ','Vô Biên Lượng','Siêu Đếm','Bất Khả Kế'] },
+            { key: 'primeval',     label: 'Thái Sơ',                oneIn: 1300000,   color: '#fb923c', secondary: '#7c2d12', adj: ['Thái Sơ','Khởi Thủy','Nguyên Sơ','Thái Thủy','Tiên Thiên','Sơ Nguyên','Thái Hư','Nguyên Khí'] },
+            { key: 'absolute',     label: 'Tuyệt Đối',              oneIn: 2300000,   color: '#f8fafc', secondary: '#0ea5e9', adj: ['Tuyệt Đối','Chí Cao','Hoàn Mỹ','Toàn Bích','Vô Khuyết','Tối Hậu','Đỉnh Phong','Cực Phẩm'] },
+            { key: 'hyperreal',    label: 'Siêu Thực Tại',          oneIn: 4000000,   color: '#f0abfc', secondary: '#a21caf', adj: ['Siêu Thực Tại','Phi Thực','Siêu Không Gian','Mộng Thực','Ngoài Thực','Siêu Chiều','Phá Thực','Ảo Tuyệt'] },
+            { key: 'sourcecode',   label: 'Nguyên Mã',              oneIn: 6500000,   color: '#22d3ee', secondary: '#164e63', adj: ['Nguyên Mã','Mã Gốc','Nhị Phân Gốc','Root Access','Hằng Số Gốc','Hàm Khởi Tạo','Biên Dịch Gốc','Kernel'] },
+            { key: 'nameless',     label: 'Vô Danh',                oneIn: 12000000,  color: '#a3a3a3', secondary: '#171717', adj: ['Vô Danh','Không Danh','Ẩn Danh','???','Kẻ Không Tên','Chưa Đặt Tên','Mất Tên','Tên Bị Xóa'] },
+            { key: 'apexorigin',   label: 'Khởi Nguyên Tối Thượng', oneIn: 20000000,  color: '#fbbf24', secondary: '#f43f5e', adj: ['Khởi Nguyên Tối Thượng','Đệ Nhất Nguyên','Thủy Tổ','Nguyên Tổ','Chúa Khởi','Mẫu Gốc','Tối Sơ','Tiên Nguyên'] },
+            { key: 'ultimate',     label: 'Chung Cực',              oneIn: 35000000,  color: '#ff3df2', secondary: '#00f3ff', adj: ['Chung Cực','Tận Cùng','Hồi Kết','Cực Điểm','Chung Kết','Tối Chung','Điểm Cuối','Hậu Thế'] },
+            { key: 'endless',      label: 'Vô Tận',                 oneIn: 60000000,  color: '#7dd3fc', secondary: '#a855f7', adj: ['Vô Tận','Bất Tận','Không Đáy','Vô Chung','Mãi Không Dừng','Vô Biên Tận','Vòng Vô Tận','Không Hồi Kết'] },
+            { key: 'omega',        label: 'Ω Omega',                oneIn: 100000000, color: '#ffd700', secondary: '#ff2a85', adj: ['Ω Omega','Ω Tối Thượng','Ω Tuyệt Đỉnh','Ω Dopamine'] }
+        ];
+
+        ULTRA_TIER_DEFS.forEach((d, i) => {
+            const tier = 10 + i;
+            RARITIES[d.key] = {
+                key: d.key,
+                tier,
+                label: d.label,
+                baseChance: 100 / d.oneIn,
+                color: d.color,
+                secondary: d.secondary,
+                glow: hexToRgba(d.color, 0.9),
+                shards: Math.round(1800 * Math.pow(1.65, i)),
+                craftCost: Math.round(8000 * Math.pow(1.65, i)),
+                badge: `rb-ultra rb-t${tier}`,
+                ultra: true
+            };
+        });
+
+        const RARITY_ORDER = [...BASE_RARITY_ORDER, ...ULTRA_TIER_DEFS.map(d => d.key)];
+        const SLOT_KEYS = ['core', 'aura', 'drone', 'chip'];
+
+        // CSS riêng cho 20 bậc siêu cấp (bậc càng cao hiệu ứng càng rực)
+        (function injectUltraTierStyles() {
+            let css = '@keyframes ultraShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}'
+                + '@keyframes ultraTextShift{0%{background-position:0% 50%}100%{background-position:200% 50%}}';
+            ULTRA_TIER_DEFS.forEach((d, i) => {
+                const t = 10 + i;
+                const animated = t >= 18;
+                css += `.rb-t${t}{color:${lightenHex(d.color, 0.35)};border-color:${d.color} !important;font-weight:800;`
+                    + (animated
+                        ? `background:linear-gradient(120deg,${hexToRgba(d.color, 0.32)},${hexToRgba(d.secondary, 0.32)},${hexToRgba(d.color, 0.32)});background-size:300% 300%;animation:ultraShift ${Math.max(1.2, 4 - (t - 18) * 0.25).toFixed(2)}s linear infinite;`
+                        : `background:${hexToRgba(d.color, 0.16)};`)
+                    + `text-shadow:0 0 ${Math.min(12, t - 8)}px ${hexToRgba(d.color, 0.65)};}`;
+            });
+            css += '.ultra-text{background:linear-gradient(90deg,var(--u1),var(--u2),#ffffff,var(--u1));background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent !important;animation:ultraTextShift 2.4s linear infinite;}';
+            const style = document.createElement('style');
+            style.textContent = css;
+            document.head.appendChild(style);
+        })();
+
+        // ---- Bảng biểu tượng, từ vựng & chỉ số gốc của 9 bậc (dùng chung cho mọi World) ----
+        const ICONS_BY_SLOT = {
+            core:  ['⚛️','🔋','⚡','🔥','💠','☀️','🌋','🌀','☢️','🧨','💡','🔮','🧿','🪐','☄️'],
+            aura:  ['✨','🌈','💫','🌟','❄️','🌊','🍃','🌸','🦋','🪽','👑','🎭','🎐','🌌','🎇'],
+            drone: ['🤖','🦆','🐱','🦉','🦊','🐉','🛸','🛰️','🦅','🐺','🐙','🦄','👾','🐝','🦈'],
+            chip:  ['💾','🧠','⚙️','🧬','📡','🎛️','📟','🔌','🔬','🧭','⏳','🗝️','🛡️','🎯','💎']
+        };
+
+        const THEMES_BY_RARITY = {
+            common: {
+                adj: ['Cơ Bản','Sơ Cấp','Tập Sự','Bằng Đồng','Nhựa Cứng','Gỗ Sồi','Thép Mỏng','Giấy Nháp','Bút Chì','Lo-Fi','Cà Phê','Trà Xanh','Pin Tiểu','Dây Cáp','Mạch In'],
+                nouns: ['Tĩnh Lặng','Nhịp Đều','Khởi Đầu','Bền Bỉ','Gọn Gàng','Tỉnh Táo','Tập Trung','Kiên Nhẫn','Sáng Sủa','Đơn Giản','Ổn Định','Nhẹ Nhàng','Cân Bằng','Mộc Mạc','Tiêu Chuẩn']
+            },
+            uncommon: {
+                adj: ['Tăng Áp','Cải Tiến','Hợp Kim','Lục Bảo','Tốc Độ','Bạc Sáng','Quang Học','Xung Nhịp','Tản Nhiệt','Sóng Âm','Cơ Học','Đa Nhân','Tự Động','Thanh Lọc','Siêu Âm'],
+                nouns: ['Mạch Xung','Dòng Chảy','Cảm Biến','Bộ Đệm','Tia Lửa','Lá Chắn','Động Cơ','Hạt Nhân','Tín Hiệu','Lăng Kính','Khung Xương','Trợ Lý','Bộ Nhớ','Mạng Lưới','Chuyển Hóa']
+            },
+            rare: {
+                adj: ['Lam Ngọc','Siêu Dẫn','Plasma','Từ Trường','Lượng Tử','Băng Giá','Sấm Sét','Thủy Tinh','Hologram','Bạch Kim','Titan','Cộng Hưởng','Tăng Tốc','Xuyên Thấu','Thiên Thanh'],
+                nouns: ['Lò Phản Ứng','Vòng Xoáy','Vệ Tinh','Bộ Xử Lý','Hào Quang','Chiến Giáp','Mắt Thần','Lõi Năng Lượng','Trường Lực','Tinh Thể','Cánh Cổng','Tuabin','Biến Tần','Kính Viễn Vọng','Ma Trận']
+            },
+            epic: {
+                adj: ['Tử Thạch','Hư Không','Bóng Đêm','Ánh Trăng','Chớp Giật','Huyết Long','Phong Bão','Thái Dương','Ngân Hà','Siêu Cấp','Ảo Ảnh','Bất Khả','Huyền Bí','Pháp Thuật','Cực Quang'],
+                nouns: ['Thánh Tích','Linh Hồn','Phượng Hoàng','Thiên Hà','Trái Tim','Vương Trượng','Con Mắt','Cỗ Máy','Biểu Tượng','Mảnh Vỡ','Ngọn Lửa','Chiến Binh','Thần Hộ Mệnh','Bản Giao Hưởng','Chìa Khóa']
+            },
+            legendary: {
+                adj: ['Hoàng Kim','Thái Cổ','Bất Diệt','Vĩnh Cửu','Thiên Đế','Rực Cháy','Tối Thượng','Vương Giả','Huyền Sử','Thần Thánh','Kỷ Nguyên','Chói Lọi','Siêu Tân Tinh','Đế Vương','Bá Chủ'],
+                nouns: ['Vương Miện','Thánh Kiếm','Mặt Trời','Long Hồn','Chân Lý','Định Mệnh','Kỳ Quan','Thần Khí','Ngai Vàng','Vũ Khúc','Thiên Nhãn','Huyết Mạch','Khải Hoàn','Tuyên Ngôn','Bản Nguyên']
+            },
+            mythic: {
+                adj: ['Huyết Nguyệt','Địa Ngục','Thiên Sứ','Hỗn Mang','Thần Thoại','Vô Song','Tuyệt Thế','Tận Thế','Bất Tử','Hủy Diệt','Cổ Đại','Thần Uy','Đoạt Mệnh','Xích Long','Tà Thần'],
+                nouns: ['Thẩm Phán','Lôi Thần','Hỏa Ngục','Thiên Phạt','Ác Quỷ','Thần Linh','Chiến Thần','Vực Thẳm','Thiên Mệnh','Huyết Ấn','Chúa Tể','Khai Thiên','Trảm Thần','Vĩnh Hằng','Tối Cao']
+            },
+            transcendent: {
+                adj: ['Siêu Việt','Phi Thăng','Thoát Xác','Vượt Ngưỡng','Thánh Hóa','Chân Tiên','Vô Ngã','Siêu Hình','Đa Chiều','Tâm Linh','Thần Cách','Bất Hoại','Cực Hạn','Siêu Nhiên','Thiên Giới'],
+                nouns: ['Chân Ngôn','Niết Bàn','Cảnh Giới','Đạo Quả','Thiên Đạo','Hư Vô','Siêu Thức','Ánh Sáng','Tinh Túy','Hóa Thần','Quy Luật','Vĩnh Sinh','Thánh Thể','Trí Tuệ','Tâm Nhãn']
+            },
+            cosmic: {
+                adj: ['Thiên Hà','Tinh Vân','Hố Đen','Vũ Trụ','Chuẩn Tinh','Sao Neutron','Đa Vũ Trụ','Vật Chất Tối','Năng Lượng Tối','Big Bang'],
+                nouns: ['Kiến Trúc Sư','Đấng Sáng Thế','Trái Tim Vũ Trụ','Dải Ngân Hà','Chòm Sao','Kỳ Dị Điểm','Vòng Lặp Thời Gian','Bụi Sao','Thiên Thể','Vô Cực']
+            },
+            singularity: {
+                adj: ['[LỖI HỆ THỐNG]','[DỊ BẢN 0x00]','[PHI LOGIC]','[VƯỢT THỰC TẠI]','[MÃ NGUỒN GỐC]','[VÔ HẠN]'],
+                nouns: ['Hạt Nhân Dị Bản','Con Mắt Lập Trình Viên','Thực Thể 404','Trái Tim Glitch','Định Lý Bất Toàn','Chúa Tể Dopamine']
+            }
+        };
+
+        const TIER_POWER = {
+            common:       { xp: 4,   luck: 3,   droneTicket: 3,  passiveXp: 2,  crit: 3,  comboMin: 5,  feverRed: 0, pityRed: 0 },
+            uncommon:     { xp: 8,   luck: 6,   droneTicket: 6,  passiveXp: 5,  crit: 5,  comboMin: 10, feverRed: 0, pityRed: 1 },
+            rare:         { xp: 15,  luck: 12,  droneTicket: 10, passiveXp: 10, crit: 8,  comboMin: 15, feverRed: 0, pityRed: 1 },
+            epic:         { xp: 25,  luck: 22,  droneTicket: 16, passiveXp: 18, crit: 12, comboMin: 20, feverRed: 1, pityRed: 2 },
+            legendary:    { xp: 40,  luck: 38,  droneTicket: 24, passiveXp: 30, crit: 18, comboMin: 30, feverRed: 1, pityRed: 3 },
+            mythic:       { xp: 65,  luck: 60,  droneTicket: 35, passiveXp: 50, crit: 25, comboMin: 45, feverRed: 1, pityRed: 4 },
+            transcendent: { xp: 100, luck: 95,  droneTicket: 50, passiveXp: 85, crit: 35, comboMin: 60, feverRed: 1, pityRed: 5 },
+            cosmic:       { xp: 160, luck: 150, droneTicket: 70, passiveXp: 140,crit: 50, comboMin: 90, feverRed: 1, pityRed: 6 },
+            singularity:  { xp: 300, luck: 280, droneTicket: 100,passiveXp: 250,crit: 75, comboMin: 120,feverRed: 1, pityRed: 7 }
         };
 
         // Hàm tạo danh sách đúng 226 vật phẩm độc đáo (45 + 40 + 35 + 30 + 25 + 20 + 15 + 10 + 6 = 226)
@@ -1074,70 +1365,18 @@
                 mythic: 20, transcendent: 15, cosmic: 10, singularity: 6
             };
 
-            const iconsBySlot = {
-                core:  ['⚛️','🔋','⚡','🔥','💠','☀️','🌋','🌀','☢️','🧨','💡','🔮','🧿','🪐','☄️'],
-                aura:  ['✨','🌈','💫','🌟','❄️','🌊','🍃','🌸','🦋','🪽','👑','🎭','🎐','🌌','🎇'],
-                drone: ['🤖','🦆','🐱','🦉','🦊','🐉','🛸','🛰️','🦅','🐺','🐙','🦄','👾','🐝','🦈'],
-                chip:  ['💾','🧠','⚙️','🧬','📡','🎛️','📟','🔌','🔬','🧭','⏳','🗝️','🛡️','🎯','💎']
-            };
+            const iconsBySlot = ICONS_BY_SLOT;
 
-            const themesByRarity = {
-                common: {
-                    adj: ['Cơ Bản','Sơ Cấp','Tập Sự','Bằng Đồng','Nhựa Cứng','Gỗ Sồi','Thép Mỏng','Giấy Nháp','Bút Chì','Lo-Fi','Cà Phê','Trà Xanh','Pin Tiểu','Dây Cáp','Mạch In'],
-                    nouns: ['Tĩnh Lặng','Nhịp Đều','Khởi Đầu','Bền Bỉ','Gọn Gàng','Tỉnh Táo','Tập Trung','Kiên Nhẫn','Sáng Sủa','Đơn Giản','Ổn Định','Nhẹ Nhàng','Cân Bằng','Mộc Mạc','Tiêu Chuẩn']
-                },
-                uncommon: {
-                    adj: ['Tăng Áp','Cải Tiến','Hợp Kim','Lục Bảo','Tốc Độ','Bạc Sáng','Quang Học','Xung Nhịp','Tản Nhiệt','Sóng Âm','Cơ Học','Đa Nhân','Tự Động','Thanh Lọc','Siêu Âm'],
-                    nouns: ['Mạch Xung','Dòng Chảy','Cảm Biến','Bộ Đệm','Tia Lửa','Lá Chắn','Động Cơ','Hạt Nhân','Tín Hiệu','Lăng Kính','Khung Xương','Trợ Lý','Bộ Nhớ','Mạng Lưới','Chuyển Hóa']
-                },
-                rare: {
-                    adj: ['Lam Ngọc','Siêu Dẫn','Plasma','Từ Trường','Lượng Tử','Băng Giá','Sấm Sét','Thủy Tinh','Hologram','Bạch Kim','Titan','Cộng Hưởng','Tăng Tốc','Xuyên Thấu','Thiên Thanh'],
-                    nouns: ['Lò Phản Ứng','Vòng Xoáy','Vệ Tinh','Bộ Xử Lý','Hào Quang','Chiến Giáp','Mắt Thần','Lõi Năng Lượng','Trường Lực','Tinh Thể','Cánh Cổng','Tuabin','Biến Tần','Kính Viễn Vọng','Ma Trận']
-                },
-                epic: {
-                    adj: ['Tử Thạch','Hư Không','Bóng Đêm','Ánh Trăng','Chớp Giật','Huyết Long','Phong Bão','Thái Dương','Ngân Hà','Siêu Cấp','Ảo Ảnh','Bất Khả','Huyền Bí','Pháp Thuật','Cực Quang'],
-                    nouns: ['Thánh Tích','Linh Hồn','Phượng Hoàng','Thiên Hà','Trái Tim','Vương Trượng','Con Mắt','Cỗ Máy','Biểu Tượng','Mảnh Vỡ','Ngọn Lửa','Chiến Binh','Thần Hộ Mệnh','Bản Giao Hưởng','Chìa Khóa']
-                },
-                legendary: {
-                    adj: ['Hoàng Kim','Thái Cổ','Bất Diệt','Vĩnh Cửu','Thiên Đế','Rực Cháy','Tối Thượng','Vương Giả','Huyền Sử','Thần Thánh','Kỷ Nguyên','Chói Lọi','Siêu Tân Tinh','Đế Vương','Bá Chủ'],
-                    nouns: ['Vương Miện','Thánh Kiếm','Mặt Trời','Long Hồn','Chân Lý','Định Mệnh','Kỳ Quan','Thần Khí','Ngai Vàng','Vũ Khúc','Thiên Nhãn','Huyết Mạch','Khải Hoàn','Tuyên Ngôn','Bản Nguyên']
-                },
-                mythic: {
-                    adj: ['Huyết Nguyệt','Địa Ngục','Thiên Sứ','Hỗn Mang','Thần Thoại','Vô Song','Tuyệt Thế','Tận Thế','Bất Tử','Hủy Diệt','Cổ Đại','Thần Uy','Đoạt Mệnh','Xích Long','Tà Thần'],
-                    nouns: ['Thẩm Phán','Lôi Thần','Hỏa Ngục','Thiên Phạt','Ác Quỷ','Thần Linh','Chiến Thần','Vực Thẳm','Thiên Mệnh','Huyết Ấn','Chúa Tể','Khai Thiên','Trảm Thần','Vĩnh Hằng','Tối Cao']
-                },
-                transcendent: {
-                    adj: ['Siêu Việt','Phi Thăng','Thoát Xác','Vượt Ngưỡng','Thánh Hóa','Chân Tiên','Vô Ngã','Siêu Hình','Đa Chiều','Tâm Linh','Thần Cách','Bất Hoại','Cực Hạn','Siêu Nhiên','Thiên Giới'],
-                    nouns: ['Chân Ngôn','Niết Bàn','Cảnh Giới','Đạo Quả','Thiên Đạo','Hư Vô','Siêu Thức','Ánh Sáng','Tinh Túy','Hóa Thần','Quy Luật','Vĩnh Sinh','Thánh Thể','Trí Tuệ','Tâm Nhãn']
-                },
-                cosmic: {
-                    adj: ['Thiên Hà','Tinh Vân','Hố Đen','Vũ Trụ','Chuẩn Tinh','Sao Neutron','Đa Vũ Trụ','Vật Chất Tối','Năng Lượng Tối','Big Bang'],
-                    nouns: ['Kiến Trúc Sư','Đấng Sáng Thế','Trái Tim Vũ Trụ','Dải Ngân Hà','Chòm Sao','Kỳ Dị Điểm','Vòng Lặp Thời Gian','Bụi Sao','Thiên Thể','Vô Cực']
-                },
-                singularity: {
-                    adj: ['[LỖI HỆ THỐNG]','[DỊ BẢN 0x00]','[PHI LOGIC]','[VƯỢT THỰC TẠI]','[MÃ NGUỒN GỐC]','[VÔ HẠN]'],
-                    nouns: ['Hạt Nhân Dị Bản','Con Mắt Lập Trình Viên','Thực Thể 404','Trái Tim Glitch','Định Lý Bất Toàn','Chúa Tể Dopamine']
-                }
-            };
+            const themesByRarity = THEMES_BY_RARITY;
 
             // Chỉ số cơ bản theo từng bậc hiếm (sẽ nhân thêm khi nâng ★1 -> ★5)
-            const tierPower = {
-                common:       { xp: 4,   luck: 3,   droneTicket: 3,  passiveXp: 2,  crit: 3,  comboMin: 5,  feverRed: 0, pityRed: 0 },
-                uncommon:     { xp: 8,   luck: 6,   droneTicket: 6,  passiveXp: 5,  crit: 5,  comboMin: 10, feverRed: 0, pityRed: 1 },
-                rare:         { xp: 15,  luck: 12,  droneTicket: 10, passiveXp: 10, crit: 8,  comboMin: 15, feverRed: 0, pityRed: 1 },
-                epic:         { xp: 25,  luck: 22,  droneTicket: 16, passiveXp: 18, crit: 12, comboMin: 20, feverRed: 1, pityRed: 2 },
-                legendary:    { xp: 40,  luck: 38,  droneTicket: 24, passiveXp: 30, crit: 18, comboMin: 30, feverRed: 1, pityRed: 3 },
-                mythic:       { xp: 65,  luck: 60,  droneTicket: 35, passiveXp: 50, crit: 25, comboMin: 45, feverRed: 1, pityRed: 4 },
-                transcendent: { xp: 100, luck: 95,  droneTicket: 50, passiveXp: 85, crit: 35, comboMin: 60, feverRed: 1, pityRed: 5 },
-                cosmic:       { xp: 160, luck: 150, droneTicket: 70, passiveXp: 140,crit: 50, comboMin: 90, feverRed: 1, pityRed: 6 },
-                singularity:  { xp: 300, luck: 280, droneTicket: 100,passiveXp: 250,crit: 75, comboMin: 120,feverRed: 1, pityRed: 7 }
-            };
+            const tierPower = TIER_POWER;
 
             const list = [];
             const slots = ['core', 'aura', 'drone', 'chip'];
             let globalIdx = 1;
 
-            RARITY_ORDER.forEach(rKey => {
+            BASE_RARITY_ORDER.forEach(rKey => {
                 const count = counts[rKey];
                 const theme = themesByRarity[rKey];
                 const pwr = tierPower[rKey];
@@ -1211,10 +1450,285 @@
             return list;
         }
 
-        const ITEMS_DB = generate226Items();
+
+        // ---- Danh từ theo loại trang bị (dùng để đặt tên đồ ở World 2 → 21) ----
+        // Mỗi danh sách đúng 16 phần tử (16 nguyên tố cùng nhau với hệ số 5 → tên không trùng lặp)
+        const SLOT_NOUNS = {
+            core:  ['Lõi','Lò Phản Ứng','Pin','Tim Năng Lượng','Hạt Nhân','Tụ Điện','Động Cơ','Tinh Thể','Ngọn Lửa','Quả Cầu','Máy Phát','Viên Đá','Ngọc Lõi','Nguồn Sáng','Bình Năng Lượng','Lò Hạt Nhân'],
+            aura:  ['Hào Quang','Vầng Sáng','Áo Choàng','Đôi Cánh','Vương Miện','Khí Tức','Lá Chắn','Màn Sương','Vòng Sáng','Linh Khí','Vũ Điệu','Dải Lụa','Cầu Vồng','Ngân Quang','Trường Lực','Hơi Thở'],
+            drone: ['Drone','Mèo Máy','Cú Mèo','Rồng Con','Cáo Nhỏ','Chim Ưng','Sói Con','Robot','Bạch Tuộc','Kỳ Lân','Ong Máy','Cá Mập','Rùa Thần','Thỏ Điện','Phượng Non','Gấu Trúc'],
+            chip:  ['Chip','Vi Mạch','Bộ Nhớ','Lõi Xử Lý','Ổ Đĩa','Thẻ Mã','Bo Mạch','Cảm Biến','Mô-đun','Bộ Giải Mã','Thuật Toán','Giao Thức','Bùa Số','Khóa Mã','Mảnh Ghép','Ma Trận']
+        };
+
+        function getTierAdjectives(rKey) {
+            const r = RARITIES[rKey];
+            return r.ultra ? ULTRA_TIER_DEFS[r.tier - 10].adj : THEMES_BY_RARITY[rKey].adj;
+        }
+
+        // Chỉ số gốc theo bậc (bậc 10+ tăng tiếp x1.22 mỗi bậc so với Dị Bản)
+        function getTierPower(tier) {
+            const key = RARITY_ORDER[tier - 1];
+            if (tier <= 9) return TIER_POWER[key];
+            const s = TIER_POWER.singularity;
+            const g = Math.pow(1.22, tier - 9);
+            return {
+                xp: Math.round(s.xp * g),
+                luck: Math.round(s.luck * g),
+                droneTicket: 100,
+                passiveXp: Math.round(s.passiveXp * g),
+                crit: Math.min(90, s.crit + (tier - 9)),
+                comboMin: Math.round(s.comboMin * (1 + (tier - 9) * 0.15)),
+                feverRed: 1,
+                pityRed: 7
+            };
+        }
+
+        // ---- 21 THẾ GIỚI ----
+        const WORLD_DEFS = [
+            { name: 'Trạm Khởi Nguyên',     icon: '⚛️', color: '#00f3ff', count: 226,   desc: 'Nơi mọi thứ bắt đầu — 226 bảo vật nguyên bản của Trạm Dopamine.', words: [], icons: [] },
+            { name: 'Rừng Neon',            icon: '🌿', color: '#22c55e', count: 300,   desc: 'Khu rừng phát sáng, rêu và đom đóm hấp thụ năng lượng học tập.',
+              words: ['Dạ Quang','Rêu Neon','Dây Leo','Bào Tử','Huỳnh Quang','Lá Kim','Rễ Cổ Thụ','Đom Đóm','Nấm Sáng','Gỗ Mun','Sương Rừng','Hoa Lan'], icons: ['🌿','🍄','🌲','🦎','🐸','🌱','🪲','🦜'] },
+            { name: 'Đại Dương Lượng Tử',   icon: '🌊', color: '#0ea5e9', count: 400,   desc: 'Đáy biển nơi sóng lượng tử cuộn trào giữa rạn san hô.',
+              words: ['San Hô','Thủy Triều','Ngọc Trai','Rạn Sâu','Sóng Ngầm','Vỏ Ốc','Hải Lưu','Bọt Biển','Đáy Biển','Lam Thủy','Cá Voi','Sứa Lượng Tử'], icons: ['🐋','🐚','🪸','🦑','🐠','🌊','🦀','🐡'] },
+            { name: 'Sa Mạc Silicon',       icon: '🏜️', color: '#eab308', count: 520,   desc: 'Biển cát silicon nóng bỏng, ẩn giấu kim tự tháp mạch điện.',
+              words: ['Cát Silicon','Ốc Đảo','Bão Cát','Hổ Phách','Xương Rồng','Kim Tự Tháp','Lạc Đà','Gió Nóng','Mặt Trời Đỏ','Sa Thạch','Ảo Ảnh Cát','Tinh Muối'], icons: ['🏜️','🌵','🐪','🦂','🏺','☀️','🐍','🗿'] },
+            { name: 'Băng Nguyên Tinh Thể', icon: '❄️', color: '#67e8f9', count: 680,   desc: 'Cánh đồng băng vĩnh cửu, mỗi bông tuyết là một tinh thể dữ liệu.',
+              words: ['Băng Tuyết','Sông Băng','Bão Tuyết','Cực Bắc','Pha Lê Lạnh','Sương Giá','Gấu Trắng','Tinh Băng','Hàn Phong','Đêm Trắng','Tuyết Lở','Băng Cổ'], icons: ['❄️','🧊','🐧','🐻‍❄️','⛄','🏔️','🌨️','🦭'] },
+            { name: 'Núi Lửa Plasma',       icon: '🌋', color: '#f97316', count: 880,   desc: 'Miệng núi lửa phun trào plasma, nơi rèn những lõi năng lượng mạnh nhất.',
+              words: ['Dung Nham','Magma','Tro Bụi','Hỏa Diệm','Lưu Huỳnh','Đá Bazan','Miệng Núi','Hơi Nóng','Plasma Đỏ','Than Hồng','Phun Trào','Lò Rèn'], icons: ['🌋','🔥','🐲','♨️','🪨','💥','🦖','🧯'] },
+            { name: 'Thành Phố Mây',        icon: '☁️', color: '#a5b4fc', count: 1150,  desc: 'Đô thị lơ lửng trên tầng mây, kết nối bằng những cây cầu cầu vồng.',
+              words: ['Mây Trắng','Tháp Trời','Khinh Khí Cầu','Cầu Vồng Cao','Gió Lộng','Thiên Không','Cánh Diều','Lầu Mây','Sấm Xa','Mưa Bạc','Đảo Bay','Bình Minh'], icons: ['☁️','🎈','🪁','🌤️','🕊️','🏙️','🌈','✈️'] },
+            { name: 'Vực Sâu Bóng Tối',     icon: '🕳️', color: '#6366f1', count: 1500,  desc: 'Hố sâu không đáy, nơi những bảo vật bị lãng quên phát sáng mờ ảo.',
+              words: ['Bóng Tối','Vực Thẳm','Hang Động','Ác Mộng','Tiếng Vọng','Mắt Đêm','Sương Đen','Xích Sắt','Nến Tàn','Cổ Mộ','Lời Nguyền','Bóng Ma'], icons: ['🕳️','🦇','🕷️','👁️','🕯️','💀','🌑','⛓️'] },
+            { name: 'Vườn Thiên Hà',        icon: '🌸', color: '#f472b6', count: 1900,  desc: 'Khu vườn trồng hoa bằng bụi sao, thơm mùi dopamine ngọt ngào.',
+              words: ['Hoa Sao','Vườn Treo','Cánh Hoa','Phấn Sao','Mật Ngọt','Hương Thơm','Ánh Hồng','Bướm Đêm','Trăng Non','Liễu Rủ','Sen Sao','Cỏ Thiên'], icons: ['🌸','🌺','🌷','🦋','🌼','🪷','🐝','🌻'] },
+            { name: 'Đế Chế Cơ Khí',        icon: '⚙️', color: '#94a3b8', count: 2400,  desc: 'Vương quốc bánh răng và hơi nước, mọi thứ đều chạy bằng ý chí.',
+              words: ['Bánh Răng','Hơi Nước','Đồng Thau','Piston','Đinh Tán','Lò Hơi','Đồng Hồ Cơ','Xích Tải','Cần Cẩu','Áp Suất','Khớp Nối','Thép Rèn'], icons: ['⚙️','🔩','🛠️','🚂','⏱️','🦾','🏭','🔧'] },
+            { name: 'Thung Lũng Thời Gian', icon: '⏳', color: '#fbbf24', count: 3000,  desc: 'Thung lũng nơi quá khứ và tương lai chảy chung một dòng sông cát.',
+              words: ['Cát Thời Gian','Kim Giờ','Quá Khứ','Tương Lai','Khoảnh Khắc','Vòng Lặp','Đồng Hồ Cát','Kỷ Niệm','Thời Khắc','Dòng Thời','Thế Kỷ','Hoài Niệm'], icons: ['⏳','⌛','🕰️','⏰','📜','🗓️','🦕','🔁'] },
+            { name: 'Thư Viện Ký Ức',       icon: '📚', color: '#c084fc', count: 3700,  desc: 'Thư viện vô tận lưu giữ mọi bài tập bạn từng giải.',
+              words: ['Trang Sách','Mực Tím','Ký Ức','Bút Lông','Cuộn Giấy','Giá Sách','Chữ Cổ','Bản Thảo','Tri Thức','Câu Chuyện','Mục Lục','Sáp Niêm'], icons: ['📚','📖','🪶','📜','🔖','🗝️','🧾','🦉'] },
+            { name: 'Tinh Vân Hoàng Kim',   icon: '✨', color: '#facc15', count: 4500,  desc: 'Đám mây sao vàng ròng, mỗi hạt bụi đều đáng giá cả gia tài.',
+              words: ['Vàng Ròng','Bụi Vàng','Tinh Vân','Kim Quang','Kim Sa','Ánh Kim','Lá Vàng','Vương Quyền','Châu Báu','Kho Báu','Thỏi Vàng','Đế Kim'], icons: ['✨','🪙','👑','💰','🏆','⭐','🌟','💛'] },
+            { name: 'Lõi Hố Đen',           icon: '🌑', color: '#a855f7', count: 5500,  desc: 'Bên trong chân trời sự kiện, ánh sáng và thời gian đều bị bẻ cong.',
+              words: ['Chân Trời','Hấp Dẫn','Đĩa Bồi Tụ','Bức Xạ Hawking','Hố Sâu','Độ Cong','Siêu Khối','Kỳ Điểm','Hút Sáng','Tối Thẳm','Vòng Photon','Sụp Đổ'], icons: ['🌑','🕳️','🌀','🪐','☄️','🌌','⚫','💫'] },
+            { name: 'Mê Cung Gương',        icon: '🪞', color: '#e879f9', count: 6700,  desc: 'Mê cung vô tận của những tấm gương phản chiếu vô số phiên bản của bạn.',
+              words: ['Gương Soi','Phản Chiếu','Ảo Ảnh','Lăng Kính','Bản Sao','Mê Lộ','Khúc Xạ','Đối Xứng','Mặt Kính','Ánh Bạc','Song Trùng','Ngã Rẽ'], icons: ['🪞','💎','🔮','🧩','🎭','🌈','👥','🔷'] },
+            { name: 'Thiên Đình Số',        icon: '🏯', color: '#fde68a', count: 8000,  desc: 'Cung điện trên chín tầng mây, được số hóa thành dữ liệu bất tử.',
+              words: ['Thiên Cung','Ngọc Hoàng','Mây Ngũ Sắc','Tiên Đan','Bàn Đào','Thiên Binh','Kim Đỉnh','Nam Thiên Môn','Linh Đài','Cửu Trùng','Tiên Hạc','Bảo Điện'], icons: ['🏯','🐉','🐲','🍑','🪭','🏮','🧧','🎐'] },
+            { name: 'Biển Sao Đỏ',          icon: '🌠', color: '#ef4444', count: 9600,  desc: 'Đại dương của những ngôi sao đỏ rực sắp bùng nổ thành siêu tân tinh.',
+              words: ['Sao Đỏ','Hồng Tinh','Lửa Sao','Tân Tinh','Sao Lùn','Thiên Thạch','Bão Mặt Trời','Gió Sao','Tinh Hồng','Đuôi Sao Chổi','Mưa Sao','Hồng Ngọc'], icons: ['🌠','☄️','🔴','🪐','💥','🌟','🚀','🛸'] },
+            { name: 'Biên Giới Thực Tại',   icon: '🧿', color: '#22d3ee', count: 11500, desc: 'Ranh giới mỏng manh giữa thế giới thật và mã nguồn vũ trụ.',
+              words: ['Ranh Giới','Vết Nứt','Không Gian Lệch','Chiều Thứ Năm','Màn Chắn','Lỗ Hổng','Lưới Thực','Mã Thực','Đường Viền','Cổng Chiều','Siêu Phẳng','Nút Thắt'], icons: ['🧿','🌀','🔺','🧬','🛰️','📡','🔳','🪬'] },
+            { name: 'Vương Quốc Glitch',    icon: '👾', color: '#ff2a85', count: 13800, desc: 'Vương quốc của lỗi pixel, nơi bug trở thành báu vật vô giá.',
+              words: ['Lỗi Pixel','Glitch','Nhiễu Sóng','Bit Lỗi','Màn Hình Xanh','Tràn Bộ Nhớ','Lặp Vô Hạn','Null','Mã Rác','Ký Tự Lạ','Sập Hệ','Bug Vàng'], icons: ['👾','🕹️','💾','🖥️','🐛','📟','🔌','🤖'] },
+            { name: 'Hư Không Vĩnh Cửu',    icon: '🌌', color: '#818cf8', count: 16500, desc: 'Khoảng lặng tuyệt đối trước khi vũ trụ được sinh ra.',
+              words: ['Tĩnh Lặng','Vô Thanh','Trống Rỗng','Bất Động','Vĩnh Viễn','Bóng Sao','Thinh Lặng','Vô Biên','Mờ Ảo','Lặng Gió','Hư Ảnh','Sương Sao'], icons: ['🌌','🌫️','🫧','🌙','💠','🔘','🌒','⭕'] },
+            { name: 'Đỉnh Dopamine Ω',      icon: '🧠', color: '#ffd700', count: 20000, desc: 'Đỉnh cao tối thượng của mọi phần thưởng — 20.000 bảo vật huyền thoại.',
+              words: ['Dopamine','Hưng Phấn','Đỉnh Cao','Khoái Cảm','Phần Thưởng','Cực Lạc','Thăng Hoa','Siêu Tập Trung','Chiến Thắng','Hào Hứng','Vinh Quang','Bùng Nổ'], icons: ['🧠','🏆','🎉','⚡','💎','🔥','🌟','👑'] }
+        ];
+
+        // Chia số đồ theo bậc: kim tự tháp (bậc thấp nhiều đồ nhất), bậc mới nhất chỉ 2–3 món độc bản
+        function computeTierCounts(N, T) {
+            const weights = [];
+            for (let t = 1; t <= T; t++) weights.push(Math.pow(0.8, t - 1));
+            const sum = weights.reduce((a, b) => a + b, 0);
+            const counts = weights.map(w => Math.max(1, Math.floor(N * w / sum)));
+            counts[T - 1] = Math.min(counts[T - 1], 1 + Math.floor(T / 10));
+            counts[0] += N - counts.reduce((a, b) => a + b, 0);
+            return counts;
+        }
+
+        const UNLOCK_RATIO = 0.75; // Cần sở hữu >= 75% đồ của World N để mở World N+1
+
+        const WORLDS = WORLD_DEFS.map((d, i) => {
+            const id = i + 1;
+            const maxTier = 8 + id;
+            const tierCounts = id === 1 ? [45, 40, 35, 30, 25, 20, 15, 10, 6] : computeTierCounts(d.count, maxTier);
+            const tierStart = [];
+            let acc = 0;
+            tierCounts.forEach(c => { tierStart.push(acc); acc += c; });
+            return {
+                ...d,
+                id,
+                maxTier,
+                tierCounts,
+                tierStart,
+                powerMult: 1 + 0.4 * i,   // Sức mạnh chỉ số (World 21 = x9)
+                capMult: 1 + 0.14 * i,    // Hệ số cho chỉ số có trần (Bạo Kích, Vé Phụ, Combo)
+                econMult: 1 + 0.25 * i    // Hệ số Mảnh nhận được / giá chế tạo
+            };
+        });
+        const TOTAL_ITEMS = WORLDS.reduce((a, w) => a + w.count, 0);
+
+        function getUnlockRequirement(w) {
+            return Math.ceil(WORLDS[w - 1].count * UNLOCK_RATIO);
+        }
+
+        // ---- Sinh vật phẩm (lười: chỉ sinh World nào cần dùng, rồi cache lại) ----
+        const WORLD_ITEMS = {};
+
+        function getWorldItems(w) {
+            if (!WORLD_ITEMS[w]) {
+                if (w === 1) {
+                    WORLD_ITEMS[1] = generate226Items().map((it, i) => Object.assign(it, { world: 1, idx: i, tier: RARITIES[it.rarity].tier }));
+                } else {
+                    WORLD_ITEMS[w] = generateWorldItems(w);
+                }
+            }
+            return WORLD_ITEMS[w];
+        }
+
+        // LƯU Ý: Không thay đổi thuật toán/thứ tự này sau khi phát hành — ID vật phẩm phụ thuộc vào nó.
+        function generateWorldItems(w) {
+            const cfg = WORLDS[w - 1];
+            const rng = mulberry32(w * 7919 + 1013904223);
+            const list = new Array(cfg.count);
+            const usedNames = new Set();
+            const iconPools = {};
+            SLOT_KEYS.forEach(s => { iconPools[s] = ICONS_BY_SLOT[s].concat(cfg.icons); });
+            const m = cfg.powerMult;
+            const cm = cfg.capMult;
+            const words = cfg.words;
+            let idx = 0;
+
+            for (let t = 1; t <= cfg.maxTier; t++) {
+                const rKey = RARITY_ORDER[t - 1];
+                const adjs = getTierAdjectives(rKey);
+                const pwr = getTierPower(t);
+                const groupCounter = { core: 0, aura: 0, drone: 0, chip: 0 };
+                const n = cfg.tierCounts[t - 1];
+
+                for (let i = 0; i < n; i++) {
+                    const slot = SLOT_KEYS[(i + t + w) % 4];
+                    const j = groupCounter[slot]++;
+                    const nouns = SLOT_NOUNS[slot];
+
+                    // Ghép tên theo hệ cơ số hỗn hợp → hầu như không trùng
+                    const d0 = j % nouns.length;
+                    const r1 = Math.floor(j / nouns.length);
+                    const d1 = r1 % adjs.length;
+                    const r2 = Math.floor(r1 / adjs.length);
+                    const d2 = r2 % words.length;
+                    const cycle = Math.floor(r2 / words.length);
+                    const noun = nouns[(d0 * 5 + w + t) % nouns.length];
+                    const adj = adjs[(d1 + d0) % adjs.length];
+                    const word = words[(d2 + d0 + d1) % words.length];
+                    const base = rKey === 'singularity' ? `${adj} ${noun} ${word}` : `${noun} ${adj} ${word}`;
+                    let k = cycle + 1;
+                    let name = k > 1 ? `${base} ${toRoman(k)}` : base;
+                    while (usedNames.has(name)) { k++; name = `${base} ${toRoman(k)}`; }
+                    usedNames.add(name);
+
+                    const pool = iconPools[slot];
+                    const icon = pool[Math.floor(rng() * pool.length)];
+                    const vary = 1 + rng() * 0.25;
+
+                    let buff;
+                    if (slot === 'core') {
+                        buff = { xpBoost: Math.round((pwr.xp + (i % 4) * Math.max(1, Math.floor(pwr.xp * 0.1))) * m * vary) };
+                    } else if (slot === 'aura') {
+                        buff = { luckBoost: Math.round((pwr.luck + (i % 4) * Math.max(1, Math.floor(pwr.luck * 0.1))) * m * vary) };
+                    } else if (slot === 'drone') {
+                        if (j % 2 === 0) {
+                            buff = { bonusTicketChance: Math.min(100, Math.round((pwr.droneTicket + (i % 3) * 2) * cm)) };
+                        } else {
+                            buff = { passiveXpPerMin: Math.round((pwr.passiveXp + (i % 3) * Math.max(1, Math.floor(pwr.passiveXp * 0.15))) * m * vary) };
+                        }
+                    } else {
+                        const mode = j % 3;
+                        if (mode === 0) {
+                            buff = { critChance: Math.min(90, Math.round((pwr.crit + (i % 3) * 2) * cm)) };
+                        } else if (mode === 1) {
+                            buff = { comboExtraMin: Math.round(pwr.comboMin * cm) };
+                        } else if (pwr.feverRed > 0 && j % 2 === 0) {
+                            buff = { feverReqReduce: 1, pityReduce: pwr.pityRed };
+                        } else {
+                            buff = { pityReduce: Math.max(1, pwr.pityRed), critChance: Math.min(90, Math.floor(pwr.crit * 0.5 * cm)) };
+                        }
+                    }
+
+                    list[idx] = {
+                        id: `w${w}_${idx + 1}`,
+                        world: w,
+                        idx,
+                        num: idx + 1,
+                        tier: t,
+                        rarity: rKey,
+                        slot,
+                        icon,
+                        name,
+                        buff
+                    };
+                    idx++;
+                }
+            }
+            return list;
+        }
+
+        function getItemById(id) {
+            if (!id || typeof id !== 'string') return null;
+            let m = /^item_(\d+)$/.exec(id);
+            if (m) return getWorldItems(1)[parseInt(m[1], 10) - 1] || null;
+            m = /^w(\d+)_(\d+)$/.exec(id);
+            if (m) {
+                const w = parseInt(m[1], 10);
+                if (w < 2 || w > WORLDS.length) return null;
+                return getWorldItems(w)[parseInt(m[2], 10) - 1] || null;
+            }
+            return null;
+        }
+
+        // Mô tả được tạo khi cần (tiết kiệm bộ nhớ cho hàng chục nghìn món)
+        function getItemLore(item) {
+            if (item.lore) return item.lore;
+            const b = item.buff;
+            const cfg = WORLDS[item.world - 1];
+            let text;
+            if (b.xpBoost) text = `Lõi năng lượng khuếch đại phản ứng, tăng trực tiếp +${fmt(b.xpBoost)}% XP mỗi khi kích nổ bài tập.`;
+            else if (b.luckBoost) text = `Trường hào quang bẻ cong xác suất lượng tử, cộng thêm +${fmt(b.luckBoost)}% May Mắn khi quay Gacha.`;
+            else if (b.bonusTicketChance) text = `Drone trinh sát tự động thu thập năng lượng dư thừa: ${b.bonusTicketChance}% cơ hội tặng thêm +1 Vé khi xong bài.`;
+            else if (b.passiveXpPerMin) text = `Bạn đồng hành tự động chuyển hóa thời gian học tập thành +${fmt(b.passiveXpPerMin)} XP mỗi phút.`;
+            else if (b.feverReqReduce) text = `Chip đột biến giảm số bài cần thiết để kích hoạt FEVER MODE xuống còn 2 bài & giảm ${b.pityReduce} mốc Pity!`;
+            else if (b.pityReduce) text = `Chip giải mã rút ngắn mốc Bảo Hiểm Pity đi ${b.pityReduce} lượt và tăng nhẹ tỷ lệ Bạo Kích.`;
+            else if (b.critChance) text = `Chip ép xung kích hoạt Bạo Kích: ${b.critChance}% cơ hội nhân đôi (hoặc x3) số Vé nhận được!`;
+            else if (b.comboExtraMin) text = `Chip ổn định mạch nhớ kéo dài thời gian duy trì chuỗi Combo thêm +${fmt(b.comboExtraMin)} phút.`;
+            else text = 'Bảo vật bí ẩn chưa ai giải mã được.';
+            item.lore = `${cfg.icon} Rèn tại ${cfg.name}. ${text}`;
+            return item.lore;
+        }
+
+        const BUFF_SEARCH_WORDS = {
+            xpBoost: 'xp kinh nghiem',
+            luckBoost: 'may man luck',
+            bonusTicketChance: 've phu ticket',
+            passiveXpPerMin: 'xp thu dong passive',
+            critChance: 'bao kich crit',
+            comboExtraMin: 'combo',
+            feverReqReduce: 'fever',
+            pityReduce: 'pity bao hiem'
+        };
+
+        function getItemSearchKey(item) {
+            if (item.sk) return item.sk;
+            const r = RARITIES[item.rarity];
+            const s = SLOT_META[item.slot];
+            const cfg = WORLDS[item.world - 1];
+            const buffWords = Object.keys(item.buff).map(k => BUFF_SEARCH_WORDS[k] || '').join(' ');
+            // Chuỗi tìm kiếm không dấu, các trường ngăn bằng "|" để cụm từ không nối qua 2 trường;
+            // mỗi từ đứng sau 1 khoảng trắng → khớp theo đầu từ
+            item.sk = ' ' + [
+                cleanSearchText(item.name),
+                cleanSearchTextCached(r.label),
+                cleanSearchTextCached(`${s.label} ${s.short}`),
+                buffWords,
+                cleanSearchTextCached(cfg.name)
+            ].join(' | ') + ' ';
+            return item.sk;
+        }
 
         /* =========================================================================
-           4. QUẢN LÝ TRẠNG THÁI, TÍNH TOÁN BUFF 4 SLOT & NÂNG SAO (★1 -> ★5)
+           4. QUẢN LÝ TRẠNG THÁI, KHO SỞ HỮU GỌN NHẸ, TÍNH BUFF 4 SLOT & NÂNG SAO
            ========================================================================= */
         const DIFFICULTY_CONFIG = {
             easy:   { label: 'Dễ',         tickets: 1, xp: 100 },
@@ -1224,8 +1738,78 @@
 
         const STAR_MULTIPLIERS = [1.0, 1.0, 1.25, 1.5, 1.75, 2.0]; // Index 1..5 -> ★1 = 1.0x, ★5 = 2.0x
 
-        const STORAGE_KEY = 'dopamine_hub_overdrive_226_v1';
-        let appState = {
+        // ---- Kho sở hữu: mỗi World là 1 mảng byte (0 = chưa có, 1..5 = số sao) ----
+        const OWN = {};
+        const OWN_COUNT = {};
+        const OWN_DIRTY = {};
+
+        function getOwnArr(w) {
+            if (!OWN[w]) {
+                OWN[w] = new Uint8Array(WORLDS[w - 1].count);
+                OWN_COUNT[w] = 0;
+            }
+            return OWN[w];
+        }
+        function getOwnedCount(w) {
+            getOwnArr(w);
+            return OWN_COUNT[w];
+        }
+        function getTotalOwned() {
+            let total = 0;
+            for (let w = 1; w <= WORLDS.length; w++) if (OWN[w]) total += OWN_COUNT[w];
+            return total;
+        }
+        function getStars(item) {
+            return item ? getOwnArr(item.world)[item.idx] : 0;
+        }
+        function setStars(item, stars) {
+            const arr = getOwnArr(item.world);
+            const prev = arr[item.idx];
+            if (prev === 0 && stars > 0) OWN_COUNT[item.world]++;
+            if (prev > 0 && stars === 0) OWN_COUNT[item.world]--;
+            arr[item.idx] = stars;
+            OWN_DIRTY[item.world] = true;
+        }
+        function loadOwnArr(w, arr) {
+            OWN[w] = arr;
+            let c = 0;
+            for (let i = 0; i < arr.length; i++) if (arr[i]) c++;
+            OWN_COUNT[w] = c;
+            OWN_DIRTY[w] = true;
+        }
+
+        // Nén RLE: 'a'..'f' = 0..5 sao, theo sau là số lần lặp (vd: "a200b3c")
+        function encodeOwned(arr) {
+            const parts = [];
+            let i = 0;
+            while (i < arr.length) {
+                const v = arr[i];
+                let j = i + 1;
+                while (j < arr.length && arr[j] === v) j++;
+                const run = j - i;
+                parts.push(String.fromCharCode(97 + v) + (run > 1 ? run : ''));
+                i = j;
+            }
+            return parts.join('');
+        }
+        function decodeOwned(str, len) {
+            const arr = new Uint8Array(len);
+            const re = /([a-f])(\d*)/g;
+            let pos = 0;
+            let m;
+            while ((m = re.exec(str)) && pos < len) {
+                const v = m[1].charCodeAt(0) - 97;
+                const run = m[2] ? parseInt(m[2], 10) : 1;
+                const end = Math.min(len, pos + run);
+                if (v > 0) arr.fill(v, pos, end);
+                pos = end;
+            }
+            return arr;
+        }
+
+        const STORAGE_KEY = 'dopamine_hub_worlds_v2';
+        const LEGACY_STORAGE_KEY = 'dopamine_hub_overdrive_226_v1';
+        const DEFAULT_STATE = {
             todayCount: 0,
             lastActiveDate: new Date().toDateString(),
             streak: 1,
@@ -1234,27 +1818,93 @@
             tickets: 5, // Tặng sẵn 5 vé trải nghiệm
             shards: 20, // Tặng sẵn 20 mảnh tinh thể
             freeTrialUsed: false,
-            // ownedItems: { [itemId]: { stars: 1..5 } }
-            ownedItems: {},
+            owned: {},  // { [worldId]: chuỗi RLE số sao }
             equipped: { core: null, aura: null, drone: null, chip: null },
             pityCounter: 15,
             comboCount: 0,
             lastTaskTimestamp: 0,
             selectedDifficulty: 'medium',
             fidgetClicks: 0,
-            reflexBest: null
+            reflexBest: null,
+            currentWorld: 1,
+            unlockedWorld: 1,
+            invView: 'card'
         };
+        let appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
 
         let lastWonItemId = null;
         let activeRarityFilter = 'all';
 
+        function syncOwnedToState() {
+            if (!appState.owned || typeof appState.owned !== 'object') appState.owned = {};
+            for (let w = 1; w <= WORLDS.length; w++) {
+                if (OWN[w] && OWN_DIRTY[w]) {
+                    appState.owned[w] = encodeOwned(OWN[w]);
+                    OWN_DIRTY[w] = false;
+                }
+            }
+        }
+
+        // Nạp dữ liệu (save mới hoặc save cũ 226 món) vào trạng thái hiện tại
+        function applyLoadedState(parsed) {
+            parsed = (parsed && typeof parsed === 'object') ? parsed : {};
+            const base = JSON.parse(JSON.stringify(DEFAULT_STATE));
+            const merged = { ...base, ...parsed };
+            merged.equipped = { ...base.equipped, ...(parsed.equipped || {}) };
+            merged.owned = {};
+
+            for (let w = 1; w <= WORLDS.length; w++) { delete OWN[w]; delete OWN_COUNT[w]; delete OWN_DIRTY[w]; }
+
+            const ownedRle = (parsed.owned && typeof parsed.owned === 'object') ? parsed.owned : {};
+            Object.keys(ownedRle).forEach(wk => {
+                const w = parseInt(wk, 10);
+                if (w >= 1 && w <= WORLDS.length && typeof ownedRle[wk] === 'string') {
+                    loadOwnArr(w, decodeOwned(ownedRle[wk], WORLDS[w - 1].count));
+                }
+            });
+
+            // Chuyển save cũ (ownedItems: { item_12: { stars: 3 } }) sang World 1
+            if (parsed.ownedItems && typeof parsed.ownedItems === 'object') {
+                const arr = getOwnArr(1);
+                Object.keys(parsed.ownedItems).forEach(key => {
+                    const mm = /^item_(\d+)$/.exec(key);
+                    if (!mm) return;
+                    const idx = parseInt(mm[1], 10) - 1;
+                    if (idx < 0 || idx >= arr.length) return;
+                    const stars = Math.max(1, Math.min(5, parseInt((parsed.ownedItems[key] || {}).stars, 10) || 1));
+                    arr[idx] = Math.max(arr[idx], stars);
+                });
+                loadOwnArr(1, arr);
+            }
+            delete merged.ownedItems;
+
+            merged.unlockedWorld = Math.max(1, Math.min(WORLDS.length, parseInt(merged.unlockedWorld, 10) || 1));
+            merged.currentWorld = Math.max(1, Math.min(merged.unlockedWorld, parseInt(merged.currentWorld, 10) || 1));
+            if (merged.invView !== 'compact') merged.invView = 'card';
+
+            appState = merged;
+
+            // Bỏ các món đang lắp không hợp lệ
+            SLOT_KEYS.forEach(s => {
+                const id = appState.equipped[s];
+                if (!id) return;
+                const it = getItemById(id);
+                if (!it || it.slot !== s || !getStars(it)) appState.equipped[s] = null;
+            });
+
+            syncOwnedToState();
+        }
+
         function loadState() {
             try {
-                const saved = localStorage.getItem(STORAGE_KEY);
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    appState = { ...appState, ...parsed };
-                }
+                let raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) raw = localStorage.getItem(LEGACY_STORAGE_KEY);
+                applyLoadedState(raw ? JSON.parse(raw) : {});
+            } catch (e) {
+                console.error('Lỗi tải dữ liệu:', e);
+                try { applyLoadedState({}); } catch (_) { /* bỏ qua */ }
+            }
+            try {
                 const todayStr = new Date().toDateString();
                 if (appState.lastActiveDate !== todayStr) {
                     const yesterday = new Date();
@@ -1264,8 +1914,9 @@
                     appState.freeTrialUsed = false;
                     appState.comboCount = 0;
                     appState.lastActiveDate = todayStr;
-                    saveState();
                 }
+                checkWorldUnlocks(true);
+                saveState();
             } catch (e) {
                 console.error('Lỗi tải dữ liệu:', e);
             }
@@ -1273,6 +1924,7 @@
 
         function saveState() {
             try {
+                syncOwnedToState();
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
             } catch (e) {
                 console.error('Lỗi lưu dữ liệu:', e);
@@ -1296,13 +1948,11 @@
                 pityReduce: 0
             };
 
-            ['core', 'aura', 'drone', 'chip'].forEach(slotKey => {
-                const itemId = appState.equipped[slotKey];
-                if (!itemId || !appState.ownedItems[itemId]) return;
-                const item = ITEMS_DB.find(i => i.id === itemId);
+            SLOT_KEYS.forEach(slotKey => {
+                const item = getItemById(appState.equipped[slotKey]);
                 if (!item) return;
-
-                const stars = appState.ownedItems[itemId].stars || 1;
+                const stars = getStars(item);
+                if (!stars) return;
                 const mult = STAR_MULTIPLIERS[stars] || 1.0;
 
                 if (item.buff.xpBoost) totals.xpBoost += Math.round(item.buff.xpBoost * mult);
@@ -1322,12 +1972,12 @@
             const mult = STAR_MULTIPLIERS[stars] || 1.0;
             const b = item.buff;
             const parts = [];
-            if (b.xpBoost) parts.push(`+${Math.round(b.xpBoost * mult)}% XP`);
-            if (b.luckBoost) parts.push(`+${Math.round(b.luckBoost * mult)}% May Mắn`);
+            if (b.xpBoost) parts.push(`+${fmt(b.xpBoost * mult)}% XP`);
+            if (b.luckBoost) parts.push(`+${fmt(b.luckBoost * mult)}% May Mắn`);
             if (b.bonusTicketChance) parts.push(`${Math.min(100, Math.round(b.bonusTicketChance * mult))}% +1 Vé Phụ`);
-            if (b.passiveXpPerMin) parts.push(`+${Math.round(b.passiveXpPerMin * mult)} XP/phút`);
+            if (b.passiveXpPerMin) parts.push(`+${fmt(b.passiveXpPerMin * mult)} XP/phút`);
             if (b.critChance) parts.push(`${Math.min(95, Math.round(b.critChance * mult))}% Bạo Kích Vé`);
-            if (b.comboExtraMin) parts.push(`+${Math.round(b.comboExtraMin * mult)}p giữ Combo`);
+            if (b.comboExtraMin) parts.push(`+${fmt(b.comboExtraMin * mult)}p giữ Combo`);
             if (b.feverReqReduce) parts.push(`Fever chỉ cần 2 bài`);
             if (b.pityReduce) parts.push(`-${b.pityReduce} mốc Pity`);
             return parts.join(' • ');
@@ -1361,11 +2011,10 @@
         // Áp dụng giao diện trực quan từ Lõi (Core), Hào Quang (Aura) và Drone đang lắp
         function applyEquippedVisuals() {
             const root = document.documentElement;
-            const coreItem = appState.equipped.core ? ITEMS_DB.find(i => i.id === appState.equipped.core) : null;
-            const auraItem = appState.equipped.aura ? ITEMS_DB.find(i => i.id === appState.equipped.aura) : null;
-            const droneItem = appState.equipped.drone ? ITEMS_DB.find(i => i.id === appState.equipped.drone) : null;
+            const coreItem = getItemById(appState.equipped.core);
+            const auraItem = getItemById(appState.equipped.aura);
+            const droneItem = getItemById(appState.equipped.drone);
 
-            // 1. Core Reactor Visual
             const coreIconEl = document.getElementById('reactor-core-icon');
             if (coreItem) {
                 const r = RARITIES[coreItem.rarity];
@@ -1380,7 +2029,6 @@
                 coreIconEl.textContent = '⚛️';
             }
 
-            // 2. Aura Visual
             if (auraItem) {
                 const r = RARITIES[auraItem.rarity];
                 root.style.setProperty('--aura-color', r.color);
@@ -1392,7 +2040,6 @@
                 document.body.classList.remove('has-high-aura');
             }
 
-            // 3. Drone Floating Companion
             const droneWidget = document.getElementById('floating-drone-widget');
             if (droneItem) {
                 const r = RARITIES[droneItem.rarity];
@@ -1406,31 +2053,32 @@
             }
         }
 
-        // Tính tỷ lệ rơi thực tế của 9 bậc sau khi cộng Luck Boost & Fever Mode
-        function getEffectiveRarityChances() {
+        // Tỷ lệ rơi thực tế của các bậc có trong World (đã cộng Luck Boost & Fever Mode)
+        function getEffectiveRarityChances(w = appState.currentWorld) {
             const buffs = calculateTotalBuffs();
             const fever = isFeverActive();
-            // Hệ số nhân may mắn: 1 + (luckBoost / 100), nhân thêm 1.5 nếu bật Fever Mode
             const luckFactor = (1 + buffs.luckBoost / 100) * (fever ? 1.5 : 1.0);
+            const maxTier = WORLDS[w - 1].maxTier;
 
-            // Các bậc từ Rare (3) đến Singularity (9) được hưởng hệ số may mắn
-            const boosted = {
-                singularity:  RARITIES.singularity.baseChance * luckFactor,
-                cosmic:       RARITIES.cosmic.baseChance * luckFactor,
-                transcendent: RARITIES.transcendent.baseChance * luckFactor,
-                mythic:       RARITIES.mythic.baseChance * luckFactor,
-                legendary:    RARITIES.legendary.baseChance * luckFactor,
-                epic:         RARITIES.epic.baseChance * luckFactor,
-                rare:         RARITIES.rare.baseChance * (1 + (luckFactor - 1) * 0.5)
-            };
-
-            const highSum = Object.values(boosted).reduce((a, b) => a + b, 0);
-            const remaining = Math.max(5, 100 - highSum);
-            // Chia phần còn lại cho Uncommon (40%) và Common (60%)
-            boosted.uncommon = remaining * 0.4;
-            boosted.common = remaining * 0.6;
-
-            return boosted;
+            const res = {};
+            let highSum = 0;
+            for (let t = 3; t <= maxTier; t++) {
+                const key = RARITY_ORDER[t - 1];
+                const base = RARITIES[key].baseChance;
+                const val = t === 3 ? base * (1 + (luckFactor - 1) * 0.5) : base * luckFactor;
+                res[key] = val;
+                highSum += val;
+            }
+            // Giữ tổng luôn = 100%: bậc Hiếm trở lên tối đa 95%
+            if (highSum > 95) {
+                const scale = 95 / highSum;
+                for (let t = 3; t <= maxTier; t++) res[RARITY_ORDER[t - 1]] *= scale;
+                highSum = 95;
+            }
+            const remaining = 100 - highSum;
+            res.uncommon = remaining * 0.4;
+            res.common = remaining * 0.6;
+            return res;
         }
 
         function updateUI() {
@@ -1444,22 +2092,20 @@
             document.body.classList.toggle('fever-mode', fever);
             document.getElementById('fever-badge').classList.toggle('hidden', !fever);
 
-            // Header & Top Stats
-            document.getElementById('header-shards').textContent = appState.shards.toLocaleString();
-            document.getElementById('stat-shards').textContent = appState.shards.toLocaleString();
-            document.getElementById('inv-shards-badge').textContent = appState.shards.toLocaleString();
-            document.getElementById('header-passive-xp').textContent = `+${buffs.passiveXpPerMin}`;
+            document.getElementById('header-shards').textContent = fmt(appState.shards);
+            document.getElementById('stat-shards').textContent = fmt(appState.shards);
+            document.getElementById('inv-shards-badge').textContent = fmt(appState.shards);
+            document.getElementById('header-passive-xp').textContent = `+${fmt(buffs.passiveXpPerMin)}`;
 
             document.getElementById('stat-today').textContent = appState.todayCount;
             document.getElementById('stat-streak').textContent = appState.streak;
             document.getElementById('stat-level').textContent = appState.level;
-            document.getElementById('stat-tickets').textContent = appState.tickets;
+            document.getElementById('stat-tickets').textContent = fmt(appState.tickets);
             document.getElementById('pity-counter').textContent = appState.pityCounter;
             document.getElementById('fidget-clicks').textContent = appState.fidgetClicks;
 
-            // Combo & Fever
             const mult = getComboMultiplier();
-            document.getElementById('stat-combo-window').textContent = 45 + buffs.comboExtraMin;
+            document.getElementById('stat-combo-window').textContent = fmt(45 + buffs.comboExtraMin);
             document.getElementById('stat-combo').textContent = `x${mult.toFixed(2).replace(/\.00$/, '.0')}`;
             document.getElementById('fever-progress-text').textContent = fever
                 ? '🔥 FEVER ĐANG BẬT (x1.5 LUCK)'
@@ -1468,38 +2114,35 @@
                 ? 'Đang kích hoạt Fever!'
                 : `${appState.comboCount}/${feverReq} bài bật Fever`;
 
-            // XP Bar
             const xpNeeded = getXpNeededForLevel(appState.level);
-            document.getElementById('xp-current').textContent = appState.xp;
-            document.getElementById('xp-next').textContent = xpNeeded;
+            document.getElementById('xp-current').textContent = fmt(appState.xp);
+            document.getElementById('xp-next').textContent = fmt(xpNeeded);
             document.getElementById('xp-bar-fill').style.width = `${Math.min(100, Math.round((appState.xp / xpNeeded) * 100))}%`;
 
-            // Bảng Buff Tổng Hợp
-            document.getElementById('buff-total-xp').textContent = `+${buffs.xpBoost}%`;
-            document.getElementById('buff-total-luck').textContent = `+${buffs.luckBoost}%`;
+            document.getElementById('buff-total-xp').textContent = `+${fmt(buffs.xpBoost)}%`;
+            document.getElementById('buff-total-luck').textContent = `+${fmt(buffs.luckBoost)}%`;
             document.getElementById('buff-total-crit').textContent = `${buffs.critChance}%`;
             document.getElementById('buff-total-bonus-ticket').textContent = `${buffs.bonusTicketChance}%`;
             document.getElementById('buff-fever-req').textContent = `${feverReq} bài`;
             document.getElementById('buff-pity-req').textContent = `${maxPity} lượt`;
 
-            // Cập nhật preview XP ở 3 nút độ khó
             ['easy', 'medium', 'hard'].forEach(k => {
                 const base = DIFFICULTY_CONFIG[k];
                 const totalXp = Math.round(base.xp * (1 + buffs.xpBoost / 100) * mult);
-                document.getElementById(`diff-sub-${k}`).textContent = `+${base.tickets} Vé • ${totalXp} XP`;
+                document.getElementById(`diff-sub-${k}`).textContent = `+${base.tickets} Vé • ${fmt(totalXp)} XP`;
             });
             selectDifficulty(appState.selectedDifficulty, false);
 
-            // Render 4 ô Loadout & Bảng tỷ lệ 9 bậc
             renderLoadoutSlots();
             renderRarityOddsGrid();
             applyEquippedVisuals();
+            updateGachaWorldBar();
 
-            // Bộ sưu tập count
-            const unlockedCount = Object.keys(appState.ownedItems).length;
-            document.getElementById('collection-count').textContent = `${unlockedCount}/${ITEMS_DB.length}`;
+            document.getElementById('collection-count').textContent = fmt(getTotalOwned());
+            document.getElementById('worlds-unlocked-count').textContent = `${appState.unlockedWorld}/${WORLDS.length}`;
+            const cw = WORLDS[appState.currentWorld - 1];
+            document.getElementById('header-world').textContent = `${cw.icon} W${cw.id} · ${cw.name}`;
 
-            // Free trial button
             const freeLabel = document.getElementById('free-trial-label');
             const freeBtn = document.getElementById('btn-roll-free');
             freeLabel.textContent = appState.freeTrialUsed ? 'Hết' : '1 lượt';
@@ -1510,15 +2153,57 @@
             }
         }
 
+        // Thanh "Đang quay tại World ..." + màn hình chờ của máy Gacha
+        function updateGachaWorldBar() {
+            const w = appState.currentWorld;
+            const cfg = WORLDS[w - 1];
+            const owned = getOwnedCount(w);
+            const req = getUnlockRequirement(w);
+            const top = RARITIES[RARITY_ORDER[cfg.maxTier - 1]];
+
+            const bar = document.getElementById('gacha-world-bar');
+            bar.style.borderColor = hexToRgba(cfg.color, 0.6);
+            bar.style.boxShadow = `0 0 18px ${hexToRgba(cfg.color, 0.15)}`;
+            document.getElementById('gacha-world-icon').textContent = cfg.icon;
+            document.getElementById('gacha-world-tag').textContent = `WORLD ${w}/${WORLDS.length}`;
+            const nameEl = document.getElementById('gacha-world-name');
+            nameEl.textContent = cfg.name;
+            nameEl.style.color = cfg.color;
+
+            let progressText;
+            let fillPct;
+            if (w >= WORLDS.length) {
+                progressText = `${fmt(owned)}/${fmt(cfg.count)} món • 🏁 World cuối cùng`;
+                fillPct = owned / cfg.count * 100;
+            } else if (appState.unlockedWorld > w) {
+                progressText = `${fmt(owned)}/${fmt(cfg.count)} món • ✅ Đã mở World ${w + 1}`;
+                fillPct = owned / cfg.count * 100;
+            } else {
+                progressText = `${fmt(owned)}/${fmt(cfg.count)} món • Mở World ${w + 1}: ${fmt(owned)}/${fmt(req)} (${Math.round(UNLOCK_RATIO * 100)}%)`;
+                fillPct = owned / req * 100;
+            }
+            document.getElementById('gacha-world-progress').textContent = progressText;
+            const fill = document.getElementById('gacha-world-bar-fill');
+            fill.style.width = `${Math.min(100, fillPct).toFixed(1)}%`;
+            fill.style.background = `linear-gradient(90deg, ${cfg.color}, ${lightenHex(cfg.color, 0.5)})`;
+
+            const sel = document.getElementById('gacha-world-select');
+            if (sel.value !== String(w)) sel.value = String(w);
+
+            document.getElementById('gacha-tier-count').textContent = cfg.maxTier;
+            document.getElementById('idle-world-icon').textContent = cfg.icon;
+            document.getElementById('idle-title').textContent = `${fmt(cfg.count)} Bảo Vật Của ${cfg.name} Đang Chờ Giải Mã!`;
+            document.getElementById('idle-sub').innerHTML = `Bậc hiếm nhất ở đây: <span class="font-extrabold ${top.tier >= 10 ? 'ultra-text' : (top.key === 'singularity' ? 'glitch-effect' : '')}" style="${top.tier >= 10 ? `--u1:${top.color};--u2:${lightenHex(top.color, 0.55)};` : `color:${top.color}`}">${top.label} (${formatChance(top.baseChance)})</span> — chỉ có ${cfg.tierCounts[cfg.maxTier - 1]} món trong cả world!`;
+        }
+
         function renderLoadoutSlots() {
             const container = document.getElementById('loadout-slots-grid');
             container.innerHTML = '';
 
-            ['core', 'aura', 'drone', 'chip'].forEach(slotKey => {
+            SLOT_KEYS.forEach(slotKey => {
                 const meta = SLOT_META[slotKey];
-                const itemId = appState.equipped[slotKey];
-                const item = itemId ? ITEMS_DB.find(i => i.id === itemId) : null;
-                const stars = (item && appState.ownedItems[itemId]) ? appState.ownedItems[itemId].stars : 1;
+                const item = getItemById(appState.equipped[slotKey]);
+                const stars = item ? (getStars(item) || 1) : 1;
 
                 const card = document.createElement('div');
                 if (item) {
@@ -1528,7 +2213,7 @@
                     card.onclick = () => switchRightTab('collection', slotKey);
                     card.innerHTML = `
                         <div class="flex items-center justify-between text-[10px]">
-                            <span class="text-slate-400 font-semibold">${meta.icon} ${meta.short}</span>
+                            <span class="text-slate-400 font-semibold">${meta.icon} ${meta.short} <span class="font-mono text-slate-500">W${item.world}</span></span>
                             <span class="font-mono font-bold text-amber-300">★${stars}</span>
                         </div>
                         <div class="flex items-center gap-2 my-1">
@@ -1553,21 +2238,19 @@
 
         function renderRarityOddsGrid() {
             const grid = document.getElementById('rarity-9-grid');
-            const chances = getEffectiveRarityChances();
-            grid.innerHTML = '';
-
-            RARITY_ORDER.forEach(rKey => {
-                const r = RARITIES[rKey];
-                const pct = chances[rKey];
-                const formattedPct = pct >= 1 ? `${pct.toFixed(1)}%` : `${pct.toFixed(2)}%`;
-                const div = document.createElement('div');
-                div.className = `px-1.5 py-1 rounded-lg border ${r.badge}`;
-                div.innerHTML = `
-                    <div class="font-bold truncate">${r.label}</div>
-                    <div class="font-mono opacity-90">${formattedPct}</div>
-                `;
-                grid.appendChild(div);
-            });
+            const w = appState.currentWorld;
+            const chances = getEffectiveRarityChances(w);
+            const maxTier = WORLDS[w - 1].maxTier;
+            const html = [];
+            for (let t = 1; t <= maxTier; t++) {
+                const r = RARITIES[RARITY_ORDER[t - 1]];
+                html.push(`
+                    <div class="px-1.5 py-1 rounded-lg border ${r.badge}" title="Bậc ${t}: ${r.label}">
+                        <div class="font-bold truncate">${r.label}</div>
+                        <div class="font-mono opacity-90">${formatChance(chances[r.key])}</div>
+                    </div>`);
+            }
+            grid.innerHTML = html.join('');
         }
 
         /* =========================================================================
@@ -1685,13 +2368,11 @@
         }, 60000);
 
         /* =========================================================================
-           6. MÁY QUAY LƯỢNG TỬ 9 BẬC HIẾM (QUAY x1 / x3 / x10 & FAKE-OUT)
+           6. MÁY QUAY LƯỢNG TỬ THEO WORLD (QUAY x1 / x3 / x10 / x100 & FAKE-OUT)
            ========================================================================= */
         let isRolling = false;
 
-        function rollSingleItemWithLuckAndPity() {
-            const buffs = calculateTotalBuffs();
-            const maxPity = Math.max(6, 15 - buffs.pityReduce);
+        function rollSingleItemWithLuckAndPity(w, chances, maxPity) {
             appState.pityCounter -= 1;
 
             let forceEpicPlus = false;
@@ -1700,41 +2381,47 @@
                 appState.pityCounter = maxPity;
             }
 
-            const chances = getEffectiveRarityChances();
-            const rand = Math.random() * 100;
-            let chosenRarity = 'common';
+            const cfg = WORLDS[w - 1];
+            let chosen = 'common';
 
             if (forceEpicPlus) {
                 // Bảo hiểm chắc chắn từ Sử Thi (Epic) trở lên
-                const highTiers = ['singularity', 'cosmic', 'transcendent', 'mythic', 'legendary', 'epic'];
-                const sumHigh = highTiers.reduce((acc, k) => acc + chances[k], 0);
-                let rPick = Math.random() * sumHigh;
-                for (const k of highTiers) {
-                    if (rPick < chances[k]) {
-                        chosenRarity = k;
-                        break;
-                    }
-                    rPick -= chances[k];
+                const high = RARITY_ORDER.slice(3, cfg.maxTier).reverse();
+                const sumHigh = high.reduce((acc, k) => acc + chances[k], 0);
+                let pick = Math.random() * sumHigh;
+                chosen = 'epic';
+                for (const k of high) {
+                    if (pick < chances[k]) { chosen = k; break; }
+                    pick -= chances[k];
                 }
             } else {
-                // Quay theo phân phối 9 bậc từ hiếm nhất xuống thường
-                const reverseOrder = [...RARITY_ORDER].reverse();
+                const rand = Math.random() * 100;
                 let cumulative = 0;
-                for (const k of reverseOrder) {
+                for (let t = cfg.maxTier; t >= 1; t--) {
+                    const k = RARITY_ORDER[t - 1];
                     cumulative += chances[k];
-                    if (rand < cumulative) {
-                        chosenRarity = k;
-                        break;
-                    }
+                    if (rand < cumulative) { chosen = k; break; }
                 }
             }
 
-            if (RARITIES[chosenRarity].tier >= 4) {
-                appState.pityCounter = maxPity;
-            }
+            const tier = RARITIES[chosen].tier;
+            if (tier >= 4) appState.pityCounter = maxPity;
 
-            const pool = ITEMS_DB.filter(item => item.rarity === chosenRarity);
-            return pool[Math.floor(Math.random() * pool.length)];
+            const items = getWorldItems(w);
+            const start = cfg.tierStart[tier - 1];
+            const n = cfg.tierCounts[tier - 1];
+            return items[start + Math.floor(Math.random() * n)];
+        }
+
+        function showGachaIdle() {
+            if (isRolling) return;
+            const stage = document.getElementById('rng-stage');
+            stage.style.borderColor = '';
+            stage.style.boxShadow = '';
+            document.getElementById('rng-result-view').classList.add('hidden');
+            document.getElementById('rng-multi-result-view').classList.add('hidden');
+            document.getElementById('rng-rolling-view').classList.add('hidden');
+            document.getElementById('rng-idle-view').classList.remove('hidden');
         }
 
         function startGachaRoll(count = 1, isFreeTrial = false) {
@@ -1748,15 +2435,21 @@
                 appState.freeTrialUsed = true;
             } else {
                 if (appState.tickets < count) {
-                    showToast(`Cần ${count} Vé Quay (bạn có ${appState.tickets} Vé). Giải thêm bài tập nhé! 🎯`, 'amber');
+                    showToast(`Cần ${fmt(count)} Vé Quay (bạn có ${fmt(appState.tickets)} Vé). Giải thêm bài tập nhé! 🎯`, 'amber');
                     return;
                 }
                 appState.tickets -= count;
             }
 
+            const w = appState.currentWorld;
+            const worldItems = getWorldItems(w);
+            const buffs = calculateTotalBuffs();
+            const maxPity = Math.max(6, 15 - buffs.pityReduce);
+            const chances = getEffectiveRarityChances(w);
+
             const wonItems = [];
             for (let i = 0; i < count; i++) {
-                wonItems.push(rollSingleItemWithLuckAndPity());
+                wonItems.push(rollSingleItemWithLuckAndPity(w, chances, maxPity));
             }
 
             saveState();
@@ -1779,14 +2472,17 @@
             multiView.classList.add('hidden');
             rollingView.classList.remove('hidden');
 
-            statusBanner.textContent = count === 10 ? '⚡ TRIỆU HỒI SIÊU TỐC x10...' : (count === 3 ? '🔥 TRIỆU HỒI NHANH x3...' : '⚛️ ĐANG GIẢI MÃ CHUỖI LƯỢNG TỬ...');
+            statusBanner.textContent = count >= 100 ? '🌀 TRIỆU HỒI HÀNG LOẠT x100...'
+                : (count === 10 ? '⚡ TRIỆU HỒI SIÊU TỐC x10...'
+                : (count === 3 ? '🔥 TRIỆU HỒI NHANH x3...' : '⚛️ ĐANG GIẢI MÃ CHUỖI LƯỢNG TỬ...'));
             statusBanner.className = 'text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold animate-pulse';
 
-            const highestTier = Math.max(...wonItems.map(it => RARITIES[it.rarity].tier));
-            // Kích hoạt Fake-out nếu trúng từ Huyền Thoại (5) trở lên
-            const triggerFakeout = (highestTier >= 5 && Math.random() < 0.75);
+            const highestTier = Math.max(...wonItems.map(it => it.tier));
+            // Fake-out khi trúng Huyền Thoại+ (x100: từ Vũ Trụ+), luôn bật với bậc siêu cấp 10+
+            const fakeThreshold = count >= 100 ? 8 : 5;
+            const triggerFakeout = highestTier >= 10 || (highestTier >= fakeThreshold && Math.random() < 0.75);
 
-            const rollDuration = count === 10 ? 1100 : 1350;
+            const rollDuration = count >= 100 ? 1500 : (count === 10 ? 1100 : 1350);
             progressBar.style.transition = 'none';
             progressBar.style.width = '0%';
             requestAnimationFrame(() => {
@@ -1796,7 +2492,7 @@
 
             let tickCount = 0;
             const tickerInterval = setInterval(() => {
-                const randomPreview = ITEMS_DB[Math.floor(Math.random() * ITEMS_DB.length)];
+                const randomPreview = worldItems[Math.floor(Math.random() * worldItems.length)];
                 tickerBox.innerHTML = `${randomPreview.icon} <span class="text-base sm:text-lg">${randomPreview.name}</span>`;
                 AudioEngine.playTick(450 + tickCount * 42);
                 tickCount++;
@@ -1806,25 +2502,39 @@
                 clearInterval(tickerInterval);
 
                 if (triggerFakeout) {
-                    const bait = ITEMS_DB[0];
+                    const bait = worldItems[0];
                     tickerBox.innerHTML = `${bait.icon} <span class="text-slate-400">${bait.name}...</span>`;
-                    statusBanner.textContent = highestTier >= 8
-                        ? '🚨 CẢNH BÁO ĐỎ: PHÁT HIỆN NĂNG LƯỢNG VŨ TRỤ / DỊ BẢN!'
-                        : '⚠️ QUÁ TẢI LƯỢNG TỬ! ĐANG LẬT KÈO...';
+                    if (highestTier >= 10) {
+                        const tr = RARITIES[RARITY_ORDER[highestTier - 1]];
+                        statusBanner.textContent = `🚨 DỊ THƯỜNG CẤP ${tr.label.toUpperCase()}! THỰC TẠI ĐANG RẠN NỨT...`;
+                    } else {
+                        statusBanner.textContent = highestTier >= 8
+                            ? '🚨 CẢNH BÁO ĐỎ: PHÁT HIỆN NĂNG LƯỢNG VŨ TRỤ / DỊ BẢN!'
+                            : '⚠️ QUÁ TẢI LƯỢNG TỬ! ĐANG LẬT KÈO...';
+                    }
                     statusBanner.className = 'text-xs font-mono uppercase tracking-widest text-rose-400 font-extrabold';
 
                     stage.classList.add('glitch-overload');
                     AudioEngine.playFakeoutGlitch();
                     triggerScreenShake();
+                    if (highestTier >= 10) setTimeout(() => { AudioEngine.playFakeoutGlitch(); triggerScreenShake(); }, 650);
 
                     setTimeout(() => {
                         stage.classList.remove('glitch-overload');
                         finalizeGachaResult(wonItems, true);
-                    }, 800);
+                    }, highestTier >= 10 ? 1400 : 800);
                 } else {
                     finalizeGachaResult(wonItems, false);
                 }
             }, rollDuration);
+        }
+
+        function nameFxClass(r) {
+            if (r.tier >= 10) return 'ultra-text';
+            return '';
+        }
+        function nameFxStyle(r) {
+            return r.tier >= 10 ? `--u1:${r.color};--u2:${lightenHex(r.color, 0.55)};` : `color:${r.color};`;
         }
 
         function finalizeGachaResult(wonItems, wasFakeout) {
@@ -1832,24 +2542,24 @@
             document.getElementById('rng-rolling-view').classList.add('hidden');
 
             let totalShardsGained = 0;
+            let newCount = 0;
             const itemStatuses = wonItems.map(item => {
-                const r = RARITIES[item.rarity];
-                if (!appState.ownedItems[item.id]) {
-                    appState.ownedItems[item.id] = { stars: 1 };
+                if (!getStars(item)) {
+                    setStars(item, 1);
+                    newCount++;
                     return { isNew: true, shards: 0 };
-                } else {
-                    appState.shards += r.shards;
-                    totalShardsGained += r.shards;
-                    return { isNew: false, shards: r.shards };
                 }
+                const gain = getShardValue(item);
+                appState.shards += gain;
+                totalShardsGained += gain;
+                return { isNew: false, shards: gain };
             });
 
+            checkWorldUnlocks(true);
             saveState();
             updateUI();
 
-            const highestItem = wonItems.reduce((prev, curr) =>
-                RARITIES[curr.rarity].tier > RARITIES[prev.rarity].tier ? curr : prev
-            );
+            const highestItem = wonItems.reduce((prev, curr) => (curr.tier > prev.tier ? curr : prev));
             const topRarity = RARITIES[highestItem.rarity];
 
             stage.style.borderColor = topRarity.color;
@@ -1870,17 +2580,17 @@
                 document.getElementById('result-fakeout-tag').classList.toggle('hidden', !wasFakeout);
 
                 const badge = document.getElementById('result-badge');
-                badge.textContent = `BẬC ${rarity.tier}: ${rarity.label.toUpperCase()} (${rarity.baseChance}%) • ${SLOT_META[item.slot].label}`;
+                badge.textContent = `BẬC ${rarity.tier}: ${rarity.label.toUpperCase()} (${formatChance(rarity.baseChance)}) • ${SLOT_META[item.slot].label} • W${item.world}`;
                 badge.className = `inline-block px-3 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider mb-1.5 border ${rarity.badge}`;
 
                 document.getElementById('result-icon').textContent = item.icon;
                 const nameEl = document.getElementById('result-name');
                 nameEl.textContent = item.name;
-                nameEl.style.color = rarity.color;
-                nameEl.classList.toggle('glitch-effect', item.rarity === 'singularity');
+                nameEl.className = `text-xl sm:text-2xl font-extrabold ${nameFxClass(rarity)} ${item.rarity === 'singularity' ? 'glitch-effect' : ''}`;
+                nameEl.style.cssText = nameFxStyle(rarity);
 
-                document.getElementById('result-buff-line').textContent = formatItemBuffText(item, appState.ownedItems[item.id].stars);
-                document.getElementById('result-desc').textContent = item.lore;
+                document.getElementById('result-buff-line').textContent = formatItemBuffText(item, getStars(item));
+                document.getElementById('result-desc').textContent = getItemLore(item);
 
                 const statusTag = document.getElementById('result-status-tag');
                 if (status.isNew) {
@@ -1888,54 +2598,75 @@
                     statusTag.textContent = '✨ VẬT PHẨM MỚI!';
                 } else {
                     statusTag.className = 'px-2.5 py-1 rounded-lg bg-fuchsia-500/20 border border-fuchsia-500/40 text-fuchsia-300 text-xs font-bold';
-                    statusTag.textContent = `♻️ Trùng → +${status.shards} Mảnh 💠`;
+                    statusTag.textContent = `♻️ Trùng → +${fmt(status.shards)} Mảnh 💠`;
                 }
             } else {
                 const multiView = document.getElementById('rng-multi-result-view');
                 const grid = document.getElementById('multi-cards-grid');
-                document.getElementById('multi-result-title').textContent = `🔥 KẾT QUẢ TRIỆU HỒI x${wonItems.length} 🔥`;
-                document.getElementById('multi-shards-summary').textContent = totalShardsGained > 0 ? `+${totalShardsGained} Mảnh 💠 từ đồ trùng` : 'Toàn đồ mới!';
+                const isBulk = wonItems.length > 10;
+                document.getElementById('multi-result-title').textContent = isBulk
+                    ? `🌀 KẾT QUẢ x${wonItems.length} — TOP 20 HIẾM NHẤT`
+                    : `🔥 KẾT QUẢ TRIỆU HỒI x${wonItems.length} 🔥`;
+                document.getElementById('multi-shards-summary').textContent = `✨ ${newCount} mới • ${totalShardsGained > 0 ? `+${fmt(totalShardsGained)} 💠` : 'không trùng'}`;
 
-                grid.innerHTML = '';
+                // Tóm tắt số lượng theo bậc (rất hữu ích cho x100)
+                const tierCounts = {};
+                wonItems.forEach(it => { tierCounts[it.tier] = (tierCounts[it.tier] || 0) + 1; });
+                document.getElementById('multi-tier-summary').innerHTML = Object.keys(tierCounts)
+                    .map(Number).sort((a, b) => b - a)
+                    .map(t => {
+                        const r = RARITIES[RARITY_ORDER[t - 1]];
+                        return `<span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border ${r.badge}">${r.label} ×${tierCounts[t]}</span>`;
+                    }).join('');
+
+                let entries = wonItems.map((it, i) => ({ item: it, st: itemStatuses[i] }));
+                if (isBulk) entries = entries.sort((a, b) => b.item.tier - a.item.tier).slice(0, 20);
+
                 grid.className = wonItems.length === 3
                     ? 'grid grid-cols-1 sm:grid-cols-3 gap-2.5 p-1'
-                    : 'grid grid-cols-2 sm:grid-cols-5 gap-2 max-h-[260px] overflow-y-auto p-1';
+                    : 'grid grid-cols-2 sm:grid-cols-5 gap-2 max-h-[300px] overflow-y-auto p-1';
 
-                wonItems.forEach((item, idx) => {
+                grid.innerHTML = entries.map(({ item, st }) => {
                     const rarity = RARITIES[item.rarity];
-                    const st = itemStatuses[idx];
-                    const card = document.createElement('div');
-                    card.className = `p-2.5 rounded-xl bg-slate-900/95 border flex flex-col items-center justify-between text-center ${item.rarity === 'singularity' ? 'singularity-rainbow' : ''}`;
-                    card.style.borderColor = rarity.color;
-                    card.innerHTML = `
-                        <span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border ${rarity.badge}">${rarity.label}</span>
-                        <div class="text-3xl my-1.5">${item.icon}</div>
-                        <div class="font-bold text-[11px] leading-tight line-clamp-1" style="color:${rarity.color}">${item.name}</div>
-                        <div class="text-[9px] font-mono text-slate-300 mt-0.5 line-clamp-1">${formatItemBuffText(item, 1)}</div>
-                        ${st.isNew
-                            ? '<span class="mt-1 text-[9px] font-bold text-emerald-400">✨ MỚI</span>'
-                            : `<span class="mt-1 text-[9px] font-bold text-fuchsia-300">+${st.shards} 💠</span>`
-                        }
-                        <button onclick="equipItemById('${item.id}')" class="mt-1.5 w-full py-1 rounded bg-slate-800 hover:bg-slate-700 text-[10px] font-bold text-cyan-300 transition cursor-pointer">
-                            Lắp
-                        </button>
-                    `;
-                    grid.appendChild(card);
-                });
+                    return `
+                        <div class="p-2.5 rounded-xl bg-slate-900/95 border flex flex-col items-center justify-between text-center ${item.rarity === 'singularity' ? 'singularity-rainbow' : ''}" style="border-color:${rarity.color};${rarity.tier >= 10 ? `box-shadow:0 0 16px ${hexToRgba(rarity.color, 0.45)};` : ''}">
+                            <span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border ${rarity.badge}">${rarity.label}</span>
+                            <div class="text-3xl my-1.5">${item.icon}</div>
+                            <div class="font-bold text-[11px] leading-tight line-clamp-1 ${nameFxClass(rarity)}" style="${nameFxStyle(rarity)}">${item.name}</div>
+                            <div class="text-[9px] font-mono text-slate-300 mt-0.5 line-clamp-1">${formatItemBuffText(item, getStars(item) || 1)}</div>
+                            ${st.isNew
+                                ? '<span class="mt-1 text-[9px] font-bold text-emerald-400">✨ MỚI</span>'
+                                : `<span class="mt-1 text-[9px] font-bold text-fuchsia-300">+${fmt(st.shards)} 💠</span>`
+                            }
+                            <button onclick="equipItemById('${item.id}')" class="mt-1.5 w-full py-1 rounded bg-slate-800 hover:bg-slate-700 text-[10px] font-bold text-cyan-300 transition cursor-pointer">
+                                Lắp
+                            </button>
+                        </div>`;
+                }).join('');
 
                 multiView.classList.remove('hidden');
             }
 
-            AudioEngine.playRarityReveal(topRarity.tier);
+            AudioEngine.playRarityReveal(Math.min(9, topRarity.tier));
             if (topRarity.tier >= 4) {
                 triggerScreenShake();
                 triggerScreenFlash(topRarity.glow);
-                Confetti.burst([topRarity.color, '#ffffff', '#ffd700', '#00f3ff'], topRarity.tier * 22);
+                Confetti.burst([topRarity.color, '#ffffff', '#ffd700', '#00f3ff'], Math.min(320, topRarity.tier * 22));
             } else {
                 Confetti.burst([topRarity.color, '#e2e8f0'], 35);
             }
+            if (topRarity.tier >= 10) {
+                setTimeout(() => {
+                    AudioEngine.playRarityReveal(9);
+                    triggerScreenFlash(hexToRgba(topRarity.secondary, 0.45));
+                    triggerScreenShake();
+                    Confetti.burst([topRarity.color, topRarity.secondary, '#ffffff'], 260);
+                }, 450);
+                showToast(`🌌 BẬC ${topRarity.tier} ${topRarity.label.toUpperCase()} (${formatChance(topRarity.baseChance)})! Bạn vừa chạm tới huyền thoại!`, 'gold');
+            }
 
             isRolling = false;
+            refreshInventoryViews();
         }
 
         function equipLastWonItem() {
@@ -1943,195 +2674,699 @@
         }
 
         function equipItemById(itemId) {
-            if (!appState.ownedItems[itemId]) return;
-            const item = ITEMS_DB.find(i => i.id === itemId);
-            if (!item) return;
+            const item = getItemById(itemId);
+            if (!item || !getStars(item)) return;
 
             appState.equipped[item.slot] = itemId;
             saveState();
             updateUI();
-            if (!document.getElementById('rpanel-collection').classList.contains('hidden')) {
-                renderCollectionGrid();
-            }
+            refreshInventoryViews();
             AudioEngine.playTick(920);
             showToast(`🛡️ Đã trang bị [${SLOT_META[item.slot].label}]: ${item.icon} ${item.name}!`, 'cyan');
         }
 
         /* =========================================================================
-           7. KHO 226 VẬT PHẨM, NÂNG CẤP SAO (★1 -> ★5) & CHẾ TẠO BẰNG MẢNH
+           7. KHO VẬT PHẨM THEO WORLD: TÌM KIẾM, LỌC, SẮP XẾP, PHÂN TRANG
+              NÂNG CẤP SAO (★1 -> ★5) & CHẾ TẠO BẰNG MẢNH
            ========================================================================= */
+        function getShardValue(item) {
+            return Math.round(RARITIES[item.rarity].shards * WORLDS[item.world - 1].econMult);
+        }
+        function getCraftCost(item) {
+            return Math.round(RARITIES[item.rarity].craftCost * WORLDS[item.world - 1].econMult);
+        }
         function getStarUpgradeCost(item, currentStars) {
-            const base = RARITIES[item.rarity].craftCost;
-            return Math.max(2, Math.round(base * 0.6 * currentStars));
+            return Math.max(2, Math.round(getCraftCost(item) * 0.6 * currentStars));
         }
 
         function upgradeItemStar(itemId) {
-            const owned = appState.ownedItems[itemId];
-            if (!owned || owned.stars >= 5) return;
-            const item = ITEMS_DB.find(i => i.id === itemId);
-            const cost = getStarUpgradeCost(item, owned.stars);
+            const item = getItemById(itemId);
+            const stars = getStars(item);
+            if (!item || !stars || stars >= 5) return;
+            const cost = getStarUpgradeCost(item, stars);
 
             if (appState.shards < cost) {
-                showToast(`Cần ${cost} Mảnh Tinh Thể 💠 để nâng lên ★${owned.stars + 1}!`, 'amber');
+                showToast(`Cần ${fmt(cost)} Mảnh Tinh Thể 💠 để nâng lên ★${stars + 1}!`, 'amber');
                 return;
             }
 
             appState.shards -= cost;
-            owned.stars += 1;
+            setStars(item, stars + 1);
             saveState();
             updateUI();
-            renderCollectionGrid();
+            refreshInventoryViews();
             AudioEngine.playLevelUp();
             Confetti.burst(['#f59e0b', '#e879f9', '#00f3ff'], 45);
-            showToast(`⭐ Nâng cấp thành công ${item.icon} ${item.name} lên ★${owned.stars}!`, 'gold');
+            showToast(`⭐ Nâng cấp thành công ${item.icon} ${item.name} lên ★${stars + 1}!`, 'gold');
         }
 
         function craftUnownedItem(itemId) {
-            if (appState.ownedItems[itemId]) return;
-            const item = ITEMS_DB.find(i => i.id === itemId);
-            const cost = RARITIES[item.rarity].craftCost;
+            const item = getItemById(itemId);
+            if (!item || getStars(item)) return;
+            const cost = getCraftCost(item);
 
             if (appState.shards < cost) {
-                showToast(`Cần ${cost} Mảnh Tinh Thể 💠 để chế tạo vật phẩm này!`, 'amber');
+                showToast(`Cần ${fmt(cost)} Mảnh Tinh Thể 💠 để chế tạo vật phẩm này!`, 'amber');
                 return;
             }
 
             appState.shards -= cost;
-            appState.ownedItems[itemId] = { stars: 1 };
+            setStars(item, 1);
+            checkWorldUnlocks(true);
             saveState();
             updateUI();
-            renderCollectionGrid();
-            AudioEngine.playRarityReveal(RARITIES[item.rarity].tier);
+            refreshInventoryViews();
+            AudioEngine.playRarityReveal(Math.min(9, item.tier));
             Confetti.burst([RARITIES[item.rarity].color, '#ffffff'], 55);
             showToast(`✨ Chế tạo thành công ${item.icon} ${item.name}!`, 'gold');
         }
 
-        function initRarityFilterPills() {
-            const container = document.getElementById('rarity-filter-pills');
-            container.innerHTML = '';
+        // Điểm sức mạnh để sắp xếp & tự lắp đồ mạnh nhất
+        function itemScore(item, stars) {
+            const m = STAR_MULTIPLIERS[stars || 1] || 1;
+            const b = item.buff;
+            return (b.xpBoost || 0) * m
+                + (b.luckBoost || 0) * m * 1.2
+                + Math.min(100, (b.bonusTicketChance || 0) * m) * 3
+                + (b.passiveXpPerMin || 0) * m * 1.5
+                + Math.min(95, (b.critChance || 0) * m) * 3
+                + (b.comboExtraMin || 0) * m * 0.5
+                + (b.pityReduce || 0) * 25
+                + (b.feverReqReduce || 0) * 40
+                + item.tier * 0.01;
+        }
 
-            const allBtn = document.createElement('button');
-            allBtn.onclick = () => { activeRarityFilter = 'all'; initRarityFilterPills(); renderCollectionGrid(); };
-            allBtn.className = `px-2 py-1 rounded-md text-[10px] font-bold border cursor-pointer ${activeRarityFilter === 'all' ? 'bg-cyan-500 text-slate-950 border-cyan-400' : 'bg-slate-900 text-slate-400 border-slate-700'}`;
-            allBtn.textContent = 'Tất cả (226)';
-            container.appendChild(allBtn);
-
-            RARITY_ORDER.forEach(rKey => {
-                const r = RARITIES[rKey];
-                const btn = document.createElement('button');
-                btn.onclick = () => { activeRarityFilter = rKey; initRarityFilterPills(); renderCollectionGrid(); };
-                const active = activeRarityFilter === rKey;
-                btn.className = `px-2 py-1 rounded-md text-[10px] font-bold border cursor-pointer transition ${active ? 'ring-2 ring-white ' + r.badge : r.badge + ' opacity-80 hover:opacity-100'}`;
-                btn.textContent = r.label;
-                container.appendChild(btn);
+        function autoEquipBest() {
+            const best = {};
+            const bestScore = {};
+            for (let w = 1; w <= appState.unlockedWorld; w++) {
+                if (!getOwnedCount(w)) continue;
+                const own = getOwnArr(w);
+                const items = getWorldItems(w);
+                for (let k = 0; k < own.length; k++) {
+                    if (!own[k]) continue;
+                    const it = items[k];
+                    const sc = itemScore(it, own[k]);
+                    if (bestScore[it.slot] === undefined || sc > bestScore[it.slot]) {
+                        bestScore[it.slot] = sc;
+                        best[it.slot] = it;
+                    }
+                }
+            }
+            if (!Object.keys(best).length) {
+                showToast('Bạn chưa có vật phẩm nào — quay Gacha để sưu tập nhé! 🎰', 'amber');
+                return;
+            }
+            let changed = 0;
+            SLOT_KEYS.forEach(s => {
+                if (best[s] && appState.equipped[s] !== best[s].id) {
+                    appState.equipped[s] = best[s].id;
+                    changed++;
+                }
             });
+            saveState();
+            updateUI();
+            refreshInventoryViews();
+            AudioEngine.playLevelUp();
+            showToast(changed ? `⚡ Đã tự lắp ${changed} món mạnh nhất vào Loadout!` : '✅ Loadout của bạn đã là mạnh nhất rồi!', changed ? 'gold' : 'cyan');
+        }
+
+        // ---- Trạng thái kho ----
+        const INV_PAGE_SIZE = { card: 30, compact: 120 };
+        let invPage = 1;
+        let invFiltered = [];
+        let invSearchTimer = null;
+        const VI_COLLATOR = new Intl.Collator('vi');
+
+        function getInvWorldList() {
+            const v = document.getElementById('filter-world').value;
+            if (v === 'all') {
+                const list = [];
+                for (let w = 1; w <= appState.unlockedWorld; w++) list.push(w);
+                return list;
+            }
+            const w = Math.max(1, Math.min(appState.unlockedWorld, parseInt(v, 10) || appState.currentWorld));
+            return [w];
+        }
+
+        // Tách từ khóa: "#123" (số hiệu), "w5" (world), "w5#123", còn lại là chữ (không dấu)
+        function parseSearch(q) {
+            const special = [];
+            const words = [];
+            normVN(q).split(/\s+/).filter(Boolean).forEach(tok => {
+                let m = /^w(\d+)#(\d+)$/.exec(tok);
+                if (m) { special.push({ type: 'wnum', w: parseInt(m[1], 10), n: parseInt(m[2], 10) }); return; }
+                m = /^#(\d+)$/.exec(tok);
+                if (m) { special.push({ type: 'num', n: parseInt(m[1], 10) }); return; }
+                m = /^w(\d+)$/.exec(tok);
+                if (m) { special.push({ type: 'world', w: parseInt(m[1], 10) }); return; }
+                cleanSearchText(tok).split(' ').filter(Boolean).forEach(x => words.push(x));
+            });
+            return { special, words, phrase: words.join(' '), active: special.length > 0 || words.length > 0 };
+        }
+
+        // phraseMode: khớp nguyên cụm từ liền nhau; ngược lại: mọi từ đều phải có (theo đầu từ)
+        function matchSearch(item, s, phraseMode) {
+            for (const tk of s.special) {
+                if (tk.type === 'num') { if (item.num !== tk.n) return false; }
+                else if (tk.type === 'wnum') { if (item.world !== tk.w || item.num !== tk.n) return false; }
+                else if (tk.type === 'world') { if (item.world !== tk.w) return false; }
+            }
+            if (!s.words.length) return true;
+            const key = getItemSearchKey(item);
+            if (phraseMode) return key.includes(' ' + s.phrase);
+            for (const wd of s.words) if (!key.includes(' ' + wd)) return false;
+            return true;
+        }
+
+        function computeInvFiltered() {
+            const search = parseSearch(document.getElementById('filter-search').value.trim());
+            // Ưu tiên khớp nguyên cụm ("long hon" → "Long Hồn"); không có kết quả thì khớp từng từ
+            let out = filterInventory(search, true);
+            if (!out.length && search.words.length > 1) out = filterInventory(search, false);
+            sortInventory(out, document.getElementById('filter-sort').value);
+            return out;
+        }
+
+        function filterInventory(search, phraseMode) {
+            const worlds = getInvWorldList();
+            const slotFilter = document.getElementById('filter-slot').value;
+            const ownedFilter = document.getElementById('filter-owned').value;
+            const starsFilter = parseInt(document.getElementById('filter-stars').value, 10) || 0;
+            const rarityTier = activeRarityFilter === 'all' ? 0 : RARITIES[activeRarityFilter].tier;
+            const shards = appState.shards;
+            const out = [];
+
+            for (const w of worlds) {
+                const items = getWorldItems(w);
+                const own = getOwnArr(w);
+                const cfg = WORLDS[w - 1];
+                let from = 0;
+                let to = items.length;
+                if (rarityTier) {
+                    if (rarityTier > cfg.maxTier) continue;
+                    from = cfg.tierStart[rarityTier - 1];
+                    to = from + cfg.tierCounts[rarityTier - 1];
+                }
+                for (let k = from; k < to; k++) {
+                    const it = items[k];
+                    if (slotFilter !== 'all' && it.slot !== slotFilter) continue;
+                    const st = own[k];
+                    if (ownedFilter === 'owned' && !st) continue;
+                    if (ownedFilter === 'unowned' && st) continue;
+                    if (ownedFilter === 'equipped' && appState.equipped[it.slot] !== it.id) continue;
+                    if (ownedFilter === 'upgradable' && !(st && st < 5 && shards >= getStarUpgradeCost(it, st))) continue;
+                    if (ownedFilter === 'craftable' && !(!st && shards >= getCraftCost(it))) continue;
+                    if (ownedFilter === 'maxed' && st !== 5) continue;
+                    if (starsFilter && st !== starsFilter) continue;
+                    if (search.active && !matchSearch(it, search, phraseMode)) continue;
+                    out.push(it);
+                }
+            }
+            return out;
+        }
+
+        function sortInventory(out, sortMode) {
+            const starsOf = it => OWN[it.world] ? OWN[it.world][it.idx] : 0;
+            if (sortMode === 'rarity_desc') out.sort((a, b) => (b.tier - a.tier) || (b.world - a.world) || (a.idx - b.idx));
+            else if (sortMode === 'rarity_asc') out.sort((a, b) => (a.tier - b.tier) || (a.world - b.world) || (a.idx - b.idx));
+            else if (sortMode === 'num') out.sort((a, b) => (a.world - b.world) || (a.idx - b.idx));
+            else if (sortMode === 'name') out.sort((a, b) => VI_COLLATOR.compare(a.name, b.name));
+            else if (sortMode === 'stars') out.sort((a, b) => (starsOf(b) - starsOf(a)) || (b.tier - a.tier) || (a.idx - b.idx));
+            else if (sortMode === 'power') {
+                const scores = new Map();
+                out.forEach(it => scores.set(it, itemScore(it, Math.max(1, starsOf(it)))));
+                out.sort((a, b) => scores.get(b) - scores.get(a));
+            }
+            return out;
         }
 
         function renderCollectionGrid() {
-            const grid = document.getElementById('inventory-grid');
-            const search = document.getElementById('filter-search').value.trim().toLowerCase();
-            const slotFilter = document.getElementById('filter-slot').value;
-            const ownedFilter = document.getElementById('filter-owned').value;
+            const worlds = getInvWorldList();
+            const maxTierSel = Math.max(...worlds.map(w => WORLDS[w - 1].maxTier));
+            if (activeRarityFilter !== 'all' && RARITIES[activeRarityFilter].tier > maxTierSel) activeRarityFilter = 'all';
 
-            const filtered = ITEMS_DB.filter(item => {
-                if (activeRarityFilter !== 'all' && item.rarity !== activeRarityFilter) return false;
-                if (slotFilter !== 'all' && item.slot !== slotFilter) return false;
-                const isOwned = !!appState.ownedItems[item.id];
-                if (ownedFilter === 'owned' && !isOwned) return false;
-                if (ownedFilter === 'unowned' && isOwned) return false;
-                if (search && !item.name.toLowerCase().includes(search) && !item.lore.toLowerCase().includes(search)) return false;
-                return true;
+            renderInvProgress(worlds);
+            initRarityFilterPills(worlds);
+            invFiltered = computeInvFiltered();
+            renderInvPage();
+        }
+
+        function renderInvProgress(worlds) {
+            const box = document.getElementById('inv-progress');
+            if (worlds.length === 1) {
+                const w = worlds[0];
+                const cfg = WORLDS[w - 1];
+                const owned = getOwnedCount(w);
+                const req = getUnlockRequirement(w);
+                const pct = owned / cfg.count * 100;
+                let unlockLine;
+                if (w >= WORLDS.length) unlockLine = '<span class="text-amber-300">🏁 Đây là World cuối cùng — hãy sưu tập trọn bộ!</span>';
+                else if (appState.unlockedWorld > w) unlockLine = `<span class="text-emerald-300">✅ Đã mở khóa World ${w + 1}: ${WORLDS[w].icon} ${WORLDS[w].name}</span>`;
+                else unlockLine = `<span class="text-slate-300">🔒 Mở World ${w + 1} (${WORLDS[w].icon} ${WORLDS[w].name}): cần <strong class="text-emerald-300">${fmt(req)}</strong> món (${Math.round(UNLOCK_RATIO * 100)}%) — còn thiếu <strong class="text-amber-300">${fmt(Math.max(0, req - owned))}</strong></span>`;
+                box.innerHTML = `
+                    <div class="flex flex-wrap items-center justify-between gap-1 text-xs">
+                        <span class="font-bold" style="color:${cfg.color}">${cfg.icon} World ${w}: ${cfg.name}</span>
+                        <span class="font-mono text-slate-300">${fmt(owned)}/${fmt(cfg.count)} (${pct.toFixed(1)}%)</span>
+                    </div>
+                    <div class="relative w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full" style="width:${Math.min(100, pct).toFixed(2)}%;background:linear-gradient(90deg, ${cfg.color}, ${lightenHex(cfg.color, 0.5)})"></div>
+                        ${w < WORLDS.length ? `<div class="absolute top-0 bottom-0 w-0.5 bg-white/80" style="left:${UNLOCK_RATIO * 100}%" title="Mốc mở World tiếp theo"></div>` : ''}
+                    </div>
+                    <div class="text-[11px]">${unlockLine}</div>`;
+            } else {
+                let owned = 0;
+                let total = 0;
+                worlds.forEach(w => { owned += getOwnedCount(w); total += WORLDS[w - 1].count; });
+                const pct = total ? owned / total * 100 : 0;
+                box.innerHTML = `
+                    <div class="flex flex-wrap items-center justify-between gap-1 text-xs">
+                        <span class="font-bold text-cyan-300">🌐 ${worlds.length} World đã mở</span>
+                        <span class="font-mono text-slate-300">${fmt(owned)}/${fmt(total)} (${pct.toFixed(1)}%) • Toàn vũ trụ: ${fmt(TOTAL_ITEMS)} món</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500" style="width:${Math.min(100, pct).toFixed(2)}%"></div>
+                    </div>`;
+            }
+        }
+
+        function initRarityFilterPills(worlds = getInvWorldList()) {
+            const container = document.getElementById('rarity-filter-pills');
+            const maxTierSel = Math.max(...worlds.map(w => WORLDS[w - 1].maxTier));
+            const ownedPerTier = new Array(maxTierSel + 1).fill(0);
+            const totalPerTier = new Array(maxTierSel + 1).fill(0);
+            let totalAll = 0;
+            worlds.forEach(w => {
+                const cfg = WORLDS[w - 1];
+                const own = getOwnArr(w);
+                for (let t = 1; t <= cfg.maxTier; t++) {
+                    const s = cfg.tierStart[t - 1];
+                    const e = s + cfg.tierCounts[t - 1];
+                    let c = 0;
+                    for (let k = s; k < e; k++) if (own[k]) c++;
+                    ownedPerTier[t] += c;
+                    totalPerTier[t] += cfg.tierCounts[t - 1];
+                }
+                totalAll += cfg.count;
             });
 
-            grid.innerHTML = '';
-            if (filtered.length === 0) {
-                grid.innerHTML = '<div class="col-span-full text-center py-10 text-xs text-slate-500">Không tìm thấy vật phẩm nào khớp với bộ lọc.</div>';
+            const html = [];
+            html.push(`<button onclick="setRarityFilter('all')" class="px-2 py-1 rounded-md text-[10px] font-bold border cursor-pointer ${activeRarityFilter === 'all' ? 'bg-cyan-500 text-slate-950 border-cyan-400' : 'bg-slate-900 text-slate-400 border-slate-700'}">Tất cả (${fmt(totalAll)})</button>`);
+            for (let t = 1; t <= maxTierSel; t++) {
+                const r = RARITIES[RARITY_ORDER[t - 1]];
+                const active = activeRarityFilter === r.key;
+                html.push(`<button onclick="setRarityFilter('${r.key}')" title="Bậc ${t}: ${r.label} — đã có ${ownedPerTier[t]}/${totalPerTier[t]}" class="px-2 py-1 rounded-md text-[10px] font-bold border cursor-pointer transition ${active ? 'ring-2 ring-white ' + r.badge : r.badge + ' opacity-80 hover:opacity-100'}">${r.label} <span class="font-mono opacity-80">${fmt(ownedPerTier[t])}/${fmt(totalPerTier[t])}</span></button>`);
+            }
+            container.innerHTML = html.join('');
+        }
+
+        function setRarityFilter(key) {
+            activeRarityFilter = key;
+            invPage = 1;
+            renderCollectionGrid();
+        }
+
+        function renderInvPage() {
+            const grid = document.getElementById('inventory-grid');
+            const view = appState.invView;
+            const size = INV_PAGE_SIZE[view];
+            const total = invFiltered.length;
+            const pages = Math.max(1, Math.ceil(total / size));
+            invPage = Math.max(1, Math.min(pages, invPage));
+            const start = (invPage - 1) * size;
+            const slice = invFiltered.slice(start, start + size);
+
+            document.getElementById('inv-result-summary').textContent = total
+                ? `Tìm thấy ${fmt(total)} món • Hiển thị ${fmt(start + 1)}–${fmt(start + slice.length)}`
+                : 'Không có kết quả';
+
+            grid.className = view === 'compact'
+                ? 'grid grid-cols-5 sm:grid-cols-8 xl:grid-cols-10 gap-1.5 max-h-[560px] overflow-y-auto pr-1'
+                : 'grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2.5 max-h-[560px] overflow-y-auto pr-1';
+
+            if (!total) {
+                const ownedMode = document.getElementById('filter-owned').value === 'owned';
+                grid.innerHTML = `<div class="col-span-full text-center py-10 text-xs text-slate-500">${ownedMode ? 'Chưa có món nào khớp bộ lọc — quay Gacha để sưu tập thêm nhé! 🎰' : 'Không tìm thấy vật phẩm nào khớp với bộ lọc.'}</div>`;
+            } else {
+                grid.innerHTML = slice.map(it => view === 'compact' ? renderItemTileHTML(it) : renderItemCardHTML(it)).join('');
+            }
+            renderInvPager(pages);
+        }
+
+        function renderInvPager(pages) {
+            const p = invPage;
+            const btn = (label, target, disabled, active = false) => `<button ${disabled ? 'disabled' : ''} onclick="setInvPage(${target})" class="min-w-[28px] px-2 py-1 rounded-md text-[11px] font-mono font-bold border transition ${active ? 'bg-cyan-500 text-slate-950 border-cyan-400' : 'bg-slate-900 text-slate-300 border-slate-700 hover:border-cyan-500/60'} ${disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}">${label}</button>`;
+
+            document.getElementById('inv-pager-top').innerHTML = pages > 1
+                ? `${btn('‹', p - 1, p <= 1)}<span class="px-1.5 font-mono text-slate-300">${fmt(p)}/${fmt(pages)}</span>${btn('›', p + 1, p >= pages)}`
+                : '';
+
+            if (pages <= 1) {
+                document.getElementById('inv-pager-bottom').innerHTML = '';
                 return;
             }
+            const parts = [btn('«', 1, p <= 1), btn('‹', p - 1, p <= 1)];
+            const from = Math.max(1, p - 2);
+            const to = Math.min(pages, p + 2);
+            if (from > 1) parts.push(btn('1', 1, false), from > 2 ? '<span class="px-1 text-slate-500">…</span>' : '');
+            for (let i = from; i <= to; i++) parts.push(btn(fmt(i), i, false, i === p));
+            if (to < pages) parts.push(to < pages - 1 ? '<span class="px-1 text-slate-500">…</span>' : '', btn(fmt(pages), pages, false));
+            parts.push(btn('›', p + 1, p >= pages), btn('»', pages, p >= pages));
+            parts.push(`<span class="ml-2 text-[11px] text-slate-400">Tới trang</span><input type="number" min="1" max="${pages}" value="${p}" onchange="setInvPage(parseInt(this.value, 10))" class="w-16 bg-slate-900 border border-slate-700 rounded-md px-1.5 py-1 text-[11px] font-mono text-white outline-none focus:border-cyan-400">`);
+            document.getElementById('inv-pager-bottom').innerHTML = parts.join('');
+        }
 
-            filtered.forEach(item => {
-                const owned = appState.ownedItems[item.id];
-                const r = RARITIES[item.rarity];
-                const slotMeta = SLOT_META[item.slot];
-                const isEquipped = appState.equipped[item.slot] === item.id;
+        function setInvPage(n) {
+            if (!n || isNaN(n)) return;
+            invPage = n;
+            renderInvPage();
+            document.getElementById('inventory-grid').scrollTop = 0;
+        }
 
-                const card = document.createElement('div');
-                card.className = `p-3 rounded-xl border flex flex-col justify-between transition ${
-                    owned
-                        ? (isEquipped ? 'bg-slate-900 border-cyan-400 shadow-md shadow-cyan-500/20' : 'bg-slate-900/95 border-slate-700/90')
-                        : 'bg-slate-950/75 border-slate-800/80'
-                }`;
+        function setInvView(view, rerender = true) {
+            appState.invView = view === 'compact' ? 'compact' : 'card';
+            const on = 'py-1 rounded-md text-[11px] font-bold bg-cyan-500 text-slate-950 cursor-pointer';
+            const off = 'py-1 rounded-md text-[11px] font-bold text-slate-400 hover:text-white cursor-pointer';
+            document.getElementById('view-btn-card').className = appState.invView === 'card' ? on : off;
+            document.getElementById('view-btn-compact').className = appState.invView === 'compact' ? on : off;
+            if (rerender) {
+                saveState();
+                invPage = 1;
+                renderInvPage();
+            }
+        }
 
-                if (owned) {
-                    const stars = owned.stars;
-                    const upgCost = getStarUpgradeCost(item, stars);
-                    card.innerHTML = `
+        function onInvSearchInput() {
+            const v = document.getElementById('filter-search').value;
+            document.getElementById('filter-search-clear').classList.toggle('hidden', !v);
+            clearTimeout(invSearchTimer);
+            invSearchTimer = setTimeout(() => { invPage = 1; renderCollectionGrid(); }, 200);
+        }
+
+        function clearInvSearch() {
+            document.getElementById('filter-search').value = '';
+            document.getElementById('filter-search-clear').classList.add('hidden');
+            invPage = 1;
+            renderCollectionGrid();
+        }
+
+        function onInvFilterChange() {
+            invPage = 1;
+            renderCollectionGrid();
+        }
+
+        function renderItemCardHTML(item) {
+            const stars = getStars(item);
+            const r = RARITIES[item.rarity];
+            const slotMeta = SLOT_META[item.slot];
+            const cfg = WORLDS[item.world - 1];
+            const isEquipped = appState.equipped[item.slot] === item.id;
+            const glow = r.tier >= 10 ? `box-shadow:0 0 14px ${hexToRgba(r.color, 0.3)};` : '';
+            const worldTag = `<span class="text-[9px] font-mono text-slate-500" title="${cfg.name}">${cfg.icon} W${item.world} #${item.num}</span>`;
+
+            if (stars) {
+                const upgCost = getStarUpgradeCost(item, stars);
+                return `
+                    <div class="p-3 rounded-xl border flex flex-col justify-between transition ${isEquipped ? 'bg-slate-900 border-cyan-400 shadow-md shadow-cyan-500/20' : 'bg-slate-900/95 border-slate-700/90'}" style="${glow}">
                         <div>
                             <div class="flex items-center justify-between gap-1 mb-1.5">
                                 <span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border ${r.badge}">${r.label}</span>
                                 <span class="text-[10px] text-slate-400">${slotMeta.icon} ${slotMeta.short}</span>
                             </div>
-                            <div class="flex items-center gap-2.5 my-1">
+                            <div class="flex items-center gap-2.5 my-1 cursor-pointer" onclick="openItemModal('${item.id}')" title="Xem chi tiết">
                                 <div class="text-3xl">${item.icon}</div>
                                 <div class="min-w-0">
-                                    <div class="font-bold text-xs truncate" style="color:${r.color}">${item.name}</div>
-                                    <div class="text-[10px] font-mono text-amber-300 font-bold">${'★'.repeat(stars)}${'☆'.repeat(5 - stars)}</div>
+                                    <div class="font-bold text-xs truncate ${nameFxClass(r)}" style="${nameFxStyle(r)}">${item.name}</div>
+                                    <div class="text-[10px] font-mono text-amber-300 font-bold">${'★'.repeat(stars)}${'☆'.repeat(5 - stars)} ${worldTag}</div>
                                 </div>
                             </div>
                             <div class="mt-1.5 px-2 py-1 rounded bg-slate-950 border border-slate-800 font-mono text-[10px] font-bold text-cyan-300">
                                 ${formatItemBuffText(item, stars)}
                             </div>
-                            <p class="text-[10px] text-slate-400 mt-1.5 line-clamp-2">${item.lore}</p>
+                            <p class="text-[10px] text-slate-400 mt-1.5 line-clamp-2">${getItemLore(item)}</p>
                         </div>
                         <div class="grid grid-cols-2 gap-1.5 mt-2.5 pt-2 border-t border-slate-800/80">
-                            <button onclick="equipItemById('${item.id}')" class="py-1.5 px-2 rounded-lg text-[10px] font-bold transition cursor-pointer ${
-                                isEquipped ? 'bg-cyan-500 text-slate-950' : 'bg-slate-800 hover:bg-slate-700 text-cyan-300'
-                            }">
+                            <button onclick="equipItemById('${item.id}')" class="py-1.5 px-2 rounded-lg text-[10px] font-bold transition cursor-pointer ${isEquipped ? 'bg-cyan-500 text-slate-950' : 'bg-slate-800 hover:bg-slate-700 text-cyan-300'}">
                                 ${isEquipped ? '✓ Đang Lắp' : '🛡️ Trang Bị'}
                             </button>
                             ${stars < 5 ? `
                                 <button onclick="upgradeItemStar('${item.id}')" class="py-1.5 px-2 rounded-lg bg-fuchsia-950/70 hover:bg-fuchsia-900/70 border border-fuchsia-500/40 text-fuchsia-200 text-[10px] font-mono font-bold transition cursor-pointer">
-                                    ★${stars + 1} (${upgCost}💠)
+                                    ★${stars + 1} (${fmt(upgCost)}💠)
                                 </button>
                             ` : `
-                                <span class="py-1.5 px-2 rounded-lg bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold text-center">
-                                    MAX ★5
-                                </span>
+                                <span class="py-1.5 px-2 rounded-lg bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold text-center">MAX ★5</span>
                             `}
                         </div>
-                    `;
-                } else {
-                    const craftCost = r.craftCost;
-                    card.innerHTML = `
-                        <div class="opacity-75">
-                            <div class="flex items-center justify-between gap-1 mb-1.5">
-                                <span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border ${r.badge}">${r.label} (${r.baseChance}%)</span>
-                                <span class="text-[10px] text-slate-500">${slotMeta.icon} ${slotMeta.short}</span>
+                    </div>`;
+            }
+
+            const craftCost = getCraftCost(item);
+            return `
+                <div class="p-3 rounded-xl border flex flex-col justify-between transition bg-slate-950/75 border-slate-800/80" style="${glow}">
+                    <div class="opacity-75">
+                        <div class="flex items-center justify-between gap-1 mb-1.5">
+                            <span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border ${r.badge}">${r.label} (${formatChance(r.baseChance)})</span>
+                            <span class="text-[10px] text-slate-500">${slotMeta.icon} ${slotMeta.short}</span>
+                        </div>
+                        <div class="flex items-center gap-2.5 my-1 cursor-pointer" onclick="openItemModal('${item.id}')" title="Xem chi tiết">
+                            <div class="text-3xl grayscale opacity-60">${item.icon}</div>
+                            <div class="min-w-0">
+                                <div class="font-bold text-xs text-slate-300 truncate">${item.name}</div>
+                                <div class="text-[10px] font-mono text-cyan-400/80 truncate">${formatItemBuffText(item, 1)}</div>
+                                <div>${worldTag}</div>
                             </div>
-                            <div class="flex items-center gap-2.5 my-1">
-                                <div class="text-3xl grayscale opacity-60">${item.icon}</div>
-                                <div class="min-w-0">
-                                    <div class="font-bold text-xs text-slate-300 truncate">${item.name}</div>
-                                    <div class="text-[10px] font-mono text-cyan-400/80">${formatItemBuffText(item, 1)}</div>
+                        </div>
+                        <p class="text-[10px] text-slate-500 mt-1.5 line-clamp-2">${getItemLore(item)}</p>
+                    </div>
+                    <button onclick="craftUnownedItem('${item.id}')" class="mt-2.5 w-full py-1.5 px-2 rounded-lg bg-slate-900 hover:bg-fuchsia-950/60 border border-slate-700 hover:border-fuchsia-500/50 text-fuchsia-300 text-[10px] font-mono font-bold transition cursor-pointer">
+                        🔨 Chế Tạo (${fmt(craftCost)} 💠)
+                    </button>
+                </div>`;
+        }
+
+        function renderItemTileHTML(item) {
+            const stars = getStars(item);
+            const r = RARITIES[item.rarity];
+            const isEquipped = appState.equipped[item.slot] === item.id;
+            return `
+                <button onclick="openItemModal('${item.id}')" title="${item.name} • ${r.label} • W${item.world} #${item.num}" class="relative aspect-square rounded-lg border bg-slate-900/90 flex flex-col items-center justify-center hover:brightness-125 transition cursor-pointer ${stars ? '' : 'opacity-40 grayscale'} ${isEquipped ? 'ring-2 ring-cyan-400' : ''}" style="border-color:${r.color};${r.tier >= 10 && stars ? `box-shadow:0 0 10px ${hexToRgba(r.color, 0.45)};` : ''}">
+                    <span class="absolute top-0 left-0.5 text-[8px] font-mono font-bold" style="color:${r.color}">${r.tier}</span>
+                    <span class="text-xl leading-none">${item.icon}</span>
+                    <span class="text-[8px] font-mono leading-none mt-0.5 ${stars ? 'text-amber-300' : 'text-slate-500'}">${stars ? '★' + stars : '🔒'}</span>
+                </button>`;
+        }
+
+        // ---- Popup chi tiết vật phẩm ----
+        let itemModalId = null;
+
+        function openItemModal(id) {
+            itemModalId = id;
+            renderItemModal();
+            const modal = document.getElementById('item-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeItemModal() {
+            itemModalId = null;
+            const modal = document.getElementById('item-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function renderItemModal() {
+            const item = getItemById(itemModalId);
+            if (!item) { closeItemModal(); return; }
+            const stars = getStars(item);
+            const r = RARITIES[item.rarity];
+            const cfg = WORLDS[item.world - 1];
+            const slotMeta = SLOT_META[item.slot];
+            const isEquipped = appState.equipped[item.slot] === item.id;
+
+            let actions;
+            if (stars) {
+                actions = `
+                    <button onclick="equipItemById('${item.id}')" class="py-2 px-3 rounded-xl text-xs font-bold transition cursor-pointer ${isEquipped ? 'bg-cyan-500 text-slate-950' : 'bg-slate-800 hover:bg-slate-700 text-cyan-300'}">${isEquipped ? '✓ Đang Lắp' : '🛡️ Trang Bị'}</button>
+                    ${stars < 5
+                        ? `<button onclick="upgradeItemStar('${item.id}')" class="py-2 px-3 rounded-xl bg-fuchsia-950/70 hover:bg-fuchsia-900/70 border border-fuchsia-500/40 text-fuchsia-200 text-xs font-mono font-bold transition cursor-pointer">Nâng ★${stars + 1} (${fmt(getStarUpgradeCost(item, stars))}💠)</button>`
+                        : '<span class="py-2 px-3 rounded-xl bg-amber-500/20 text-amber-300 text-xs font-mono font-bold text-center">MAX ★5</span>'}`;
+            } else {
+                actions = `<button onclick="craftUnownedItem('${item.id}')" class="col-span-2 py-2 px-3 rounded-xl bg-slate-900 hover:bg-fuchsia-950/60 border border-slate-700 hover:border-fuchsia-500/50 text-fuchsia-300 text-xs font-mono font-bold transition cursor-pointer">🔨 Chế Tạo (${fmt(getCraftCost(item))} 💠 — bạn có ${fmt(appState.shards)})</button>`;
+            }
+
+            document.getElementById('item-modal-body').innerHTML = `
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${r.badge}">Bậc ${r.tier}: ${r.label} (${formatChance(r.baseChance)})</span>
+                    <button onclick="closeItemModal()" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer">✕</button>
+                </div>
+                <div class="text-center">
+                    <div class="text-6xl my-2 ${stars ? '' : 'grayscale opacity-60'}">${item.icon}</div>
+                    <h3 class="text-lg font-extrabold ${nameFxClass(r)} ${item.rarity === 'singularity' ? 'glitch-effect' : ''}" style="${nameFxStyle(r)}">${item.name}</h3>
+                    <div class="text-sm font-mono text-amber-300 font-bold mt-0.5">${stars ? '★'.repeat(stars) + '☆'.repeat(5 - stars) : '🔒 Chưa sở hữu'}</div>
+                    <div class="mt-2 inline-block px-3 py-1 rounded-lg bg-slate-900 border border-slate-700 font-mono text-xs font-bold text-cyan-300">${formatItemBuffText(item, stars || 1)}</div>
+                    <p class="text-xs text-slate-400 mt-2">${getItemLore(item)}</p>
+                </div>
+                <div class="grid grid-cols-2 gap-1.5 mt-3 text-[11px] font-mono">
+                    <div class="px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-400">World: <span style="color:${cfg.color}">${cfg.icon} ${item.world} · ${cfg.name}</span></div>
+                    <div class="px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-400">Số hiệu: <span class="text-white">W${item.world} #${item.num}</span></div>
+                    <div class="px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-400">Loại: <span class="text-white">${slotMeta.icon} ${slotMeta.label}</span></div>
+                    <div class="px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-400">Trùng → <span class="text-fuchsia-300">+${fmt(getShardValue(item))} 💠</span></div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mt-3">${actions}</div>`;
+        }
+
+        // Cập nhật lại các bảng đang mở sau khi sở hữu/trang bị thay đổi
+        function refreshInventoryViews() {
+            if (!document.getElementById('rpanel-collection').classList.contains('hidden')) renderCollectionGrid();
+            if (!document.getElementById('rpanel-worlds').classList.contains('hidden')) renderWorldMap();
+            if (itemModalId) renderItemModal();
+        }
+
+        /* =========================================================================
+           7B. BẢN ĐỒ 21 THẾ GIỚI, MỞ KHÓA & DU HÀNH
+           ========================================================================= */
+        function checkWorldUnlocks(announce = true) {
+            let unlockedAny = false;
+            while (appState.unlockedWorld < WORLDS.length && getOwnedCount(appState.unlockedWorld) >= getUnlockRequirement(appState.unlockedWorld)) {
+                appState.unlockedWorld++;
+                unlockedAny = true;
+                if (announce) {
+                    const nw = WORLDS[appState.unlockedWorld - 1];
+                    setTimeout(() => {
+                        AudioEngine.playLevelUp();
+                        Confetti.burst([nw.color, '#ffffff', '#ffd700'], 180);
+                        triggerScreenFlash(hexToRgba(nw.color, 0.4));
+                        showToast(`🌍 MỞ KHÓA WORLD ${nw.id}: ${nw.icon} ${nw.name}! Vào tab Thế Giới để du hành 🚀`, 'gold');
+                    }, 1000);
+                }
+            }
+            if (unlockedAny) refreshWorldSelects();
+            return unlockedAny;
+        }
+
+        function refreshWorldSelects() {
+            const gs = document.getElementById('gacha-world-select');
+            if (!gs) return;
+            gs.innerHTML = WORLDS.map(cfg => {
+                const locked = cfg.id > appState.unlockedWorld;
+                return `<option value="${cfg.id}" ${locked ? 'disabled' : ''}>${locked ? '🔒' : cfg.icon} W${cfg.id} · ${cfg.name}</option>`;
+            }).join('');
+            gs.value = String(appState.currentWorld);
+
+            const fw = document.getElementById('filter-world');
+            const prev = fw.value;
+            fw.innerHTML = `<option value="all">🌐 Tất cả ${appState.unlockedWorld} world đã mở</option>`
+                + WORLDS.slice(0, appState.unlockedWorld).map(cfg => `<option value="${cfg.id}">${cfg.icon} World ${cfg.id} · ${cfg.name}</option>`).join('');
+            fw.value = (prev && [...fw.options].some(o => o.value === prev)) ? prev : String(appState.currentWorld);
+        }
+
+        function travelToWorld(w, goToGacha = false) {
+            if (!w || w < 1 || w > WORLDS.length) return;
+            if (w > appState.unlockedWorld) {
+                showToast(`🔒 World ${w} chưa mở! Cần sưu tập ${Math.round(UNLOCK_RATIO * 100)}% bảo vật của World ${w - 1}.`, 'amber');
+                refreshWorldSelects();
+                return;
+            }
+            if (isRolling) {
+                showToast('Đợi máy quay xong đã nhé! ⏳', 'amber');
+                refreshWorldSelects();
+                return;
+            }
+            const cfg = WORLDS[w - 1];
+            const changed = appState.currentWorld !== w;
+            appState.currentWorld = w;
+            getWorldItems(w);
+            const fw = document.getElementById('filter-world');
+            if (fw.value !== 'all') fw.value = String(w);
+            saveState();
+            updateUI();
+            showGachaIdle();
+            if (goToGacha) switchRightTab('gacha');
+            refreshInventoryViews();
+            if (changed) {
+                AudioEngine.playRarityReveal(4);
+                Confetti.burst([cfg.color, '#ffffff'], 60);
+                showToast(`🚀 Đã du hành tới World ${w}: ${cfg.icon} ${cfg.name}!`, 'cyan');
+            }
+        }
+
+        function openWorldInventory(w) {
+            const fw = document.getElementById('filter-world');
+            fw.value = String(w);
+            activeRarityFilter = 'all';
+            switchRightTab('collection');
+        }
+
+        function renderWorldMap() {
+            const grid = document.getElementById('world-map-grid');
+            const totalOwned = getTotalOwned();
+            document.getElementById('world-map-summary').innerHTML = `Đã mở: ${appState.unlockedWorld}/${WORLDS.length} world<br>Sưu tập: ${fmt(totalOwned)}/${fmt(TOTAL_ITEMS)} món`;
+
+            grid.innerHTML = WORLDS.map(cfg => {
+                const w = cfg.id;
+                const unlocked = w <= appState.unlockedWorld;
+                const isHere = w === appState.currentWorld;
+                const top = RARITIES[RARITY_ORDER[cfg.maxTier - 1]];
+                const topLabel = `<span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border ${top.badge}">${top.label} ${formatChance(top.baseChance)}</span>`;
+
+                if (!unlocked) {
+                    const prevOwned = getOwnedCount(w - 1);
+                    const prevReq = getUnlockRequirement(w - 1);
+                    const pct = Math.min(100, prevOwned / prevReq * 100);
+                    const isNext = w === appState.unlockedWorld + 1;
+                    return `
+                        <div class="p-3 rounded-xl border border-slate-800 bg-slate-950/80 ${isNext ? '' : 'opacity-55'}">
+                            <div class="flex items-center gap-2.5">
+                                <div class="text-3xl grayscale opacity-60">${cfg.icon}</div>
+                                <div class="min-w-0 flex-1">
+                                    <div class="text-[10px] font-mono text-slate-500 font-bold">WORLD ${w} • 🔒 KHÓA</div>
+                                    <div class="font-extrabold text-sm text-slate-300 truncate">${cfg.name}</div>
+                                    <div class="text-[10px] text-slate-500">📦 ${fmt(cfg.count)} bảo vật • ${cfg.maxTier} bậc</div>
                                 </div>
                             </div>
-                            <p class="text-[10px] text-slate-500 mt-1.5 line-clamp-2">${item.lore}</p>
-                        </div>
-                        <button onclick="craftUnownedItem('${item.id}')" class="mt-2.5 w-full py-1.5 px-2 rounded-lg bg-slate-900 hover:bg-fuchsia-950/60 border border-slate-700 hover:border-fuchsia-500/50 text-fuchsia-300 text-[10px] font-mono font-bold transition cursor-pointer">
-                            🔨 Chế Tạo (${craftCost} 💠)
-                        </button>
-                    `;
+                            <div class="mt-2">${topLabel}</div>
+                            <div class="mt-2 text-[10px] text-slate-400">Cần ${Math.round(UNLOCK_RATIO * 100)}% World ${w - 1}: <span class="font-mono text-amber-300">${fmt(prevOwned)}/${fmt(prevReq)}</span></div>
+                            <div class="mt-1 w-full h-1.5 bg-slate-800 rounded-full overflow-hidden"><div class="h-full rounded-full bg-amber-400" style="width:${pct.toFixed(1)}%"></div></div>
+                        </div>`;
                 }
 
-                grid.appendChild(card);
-            });
+                const owned = getOwnedCount(w);
+                const pct = owned / cfg.count * 100;
+                return `
+                    <div class="p-3 rounded-xl border bg-slate-900/90 transition ${isHere ? 'shadow-lg' : ''}" style="border-color:${isHere ? cfg.color : hexToRgba(cfg.color, 0.35)};${isHere ? `box-shadow:0 0 18px ${hexToRgba(cfg.color, 0.3)};` : ''}">
+                        <div class="flex items-center gap-2.5">
+                            <div class="text-3xl">${cfg.icon}</div>
+                            <div class="min-w-0 flex-1">
+                                <div class="text-[10px] font-mono font-bold" style="color:${cfg.color}">WORLD ${w}${isHere ? ' • 📍 ĐANG Ở ĐÂY' : ''}</div>
+                                <div class="font-extrabold text-sm text-white truncate">${cfg.name}</div>
+                                <div class="text-[10px] text-slate-400">📦 ${fmt(cfg.count)} bảo vật • ${cfg.maxTier} bậc</div>
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-1.5 line-clamp-2">${cfg.desc}</p>
+                        <div class="mt-2">${topLabel}</div>
+                        <div class="mt-2 flex items-center justify-between text-[10px] font-mono">
+                            <span class="text-slate-400">Sưu tập</span>
+                            <span class="text-slate-200">${fmt(owned)}/${fmt(cfg.count)} (${pct.toFixed(1)}%)</span>
+                        </div>
+                        <div class="relative mt-1 w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full" style="width:${Math.min(100, pct).toFixed(2)}%;background:${cfg.color}"></div>
+                            ${w < WORLDS.length ? `<div class="absolute top-0 bottom-0 w-0.5 bg-white/70" style="left:${UNLOCK_RATIO * 100}%"></div>` : ''}
+                        </div>
+                        <div class="grid grid-cols-2 gap-1.5 mt-2.5">
+                            ${isHere
+                                ? '<span class="py-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-[10px] font-bold text-center">📍 Đang ở đây</span>'
+                                : `<button onclick="travelToWorld(${w}, true)" class="py-1.5 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/50 text-cyan-200 text-[10px] font-bold transition cursor-pointer">🚀 Du hành</button>`}
+                            <button onclick="openWorldInventory(${w})" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-[10px] font-bold transition cursor-pointer">🎒 Xem kho</button>
+                        </div>
+                    </div>`;
+            }).join('');
         }
 
         /* =========================================================================
            8. CHUYỂN TAB CỘT PHẢI & SAO LƯU MÃ (EXPORT / IMPORT)
            ========================================================================= */
         function switchRightTab(tabName, slotFilter = null) {
-            ['gacha', 'collection', 'minigames'].forEach(t => {
+            ['gacha', 'collection', 'worlds', 'minigames'].forEach(t => {
                 const btn = document.getElementById(`rtab-btn-${t}`);
                 const panel = document.getElementById(`rpanel-${t}`);
                 if (t === tabName) {
@@ -2144,14 +3379,25 @@
             });
 
             if (tabName === 'collection') {
-                if (slotFilter) document.getElementById('filter-slot').value = slotFilter;
-                initRarityFilterPills();
+                if (slotFilter) {
+                    document.getElementById('filter-slot').value = slotFilter;
+                    if (slotFilter !== 'all') {
+                        // Bấm từ ô Loadout → xem đồ đã có của loại đó ở mọi world, mạnh nhất trước
+                        document.getElementById('filter-world').value = 'all';
+                        document.getElementById('filter-owned').value = 'owned';
+                        document.getElementById('filter-sort').value = 'power';
+                        activeRarityFilter = 'all';
+                    }
+                }
+                invPage = 1;
                 renderCollectionGrid();
             }
+            if (tabName === 'worlds') renderWorldMap();
             AudioEngine.playTick(720);
         }
 
         function openSaveModal() {
+            saveState();
             const modal = document.getElementById('save-modal');
             const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(appState))));
             document.getElementById('save-code-textarea').value = encoded;
@@ -2176,12 +3422,17 @@
             try {
                 const raw = document.getElementById('save-code-textarea').value.trim();
                 const decoded = JSON.parse(decodeURIComponent(escape(atob(raw))));
-                if (!decoded || typeof decoded !== 'object' || !decoded.ownedItems) {
+                if (!decoded || typeof decoded !== 'object' || (!decoded.ownedItems && !decoded.owned)) {
                     throw new Error('Invalid');
                 }
-                appState = { ...appState, ...decoded };
+                applyLoadedState(decoded);
+                checkWorldUnlocks(true);
+                refreshWorldSelects();
+                setInvView(appState.invView, false);
                 saveState();
                 updateUI();
+                showGachaIdle();
+                refreshInventoryViews();
                 closeSaveModal();
                 showToast('✅ Khôi phục dữ liệu thành công!', 'gold');
             } catch (e) {
@@ -2465,6 +3716,8 @@
 
         window.onload = function() {
             loadState();
+            refreshWorldSelects();
+            setInvView(appState.invView, false);
             updateUI();
             initNumberdle();
             initZenGrid();
